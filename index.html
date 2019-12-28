@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car</title>
     <style>
+      body {
+        overflow: hidden;
+      }
       canvas {
         position: absolute;
         top: 0;
@@ -71,16 +74,83 @@
         keysDown[e.which] = false;
       });
 
-      setInterval(() => {
-        if (keysDown[38]) {
-          power += powerFactor;
-        } else {
-          power -= powerFactor * 2;
+      const touching = {};
+
+      window.addEventListener('touchstart', e => {
+        if (touching.active) {
+          return;
         }
-        if (keysDown[40]) {
-          brakingPower += brakingFactor;
+        e.preventDefault();
+        touching.active = true;
+
+        const startPos = {
+          x: e.touches[0].pageX,
+          y: e.touches[0].pageY
+        };
+
+        const touchmove = e => {
+          e.preventDefault();
+
+          const diff = {
+            x: e.touches[0].pageX - startPos.x,
+            y: e.touches[0].pageY - startPos.y
+          };
+
+          if (diff.y < 0) {
+            touching.up = Math.min(1, Math.abs(diff.y / (windowHeight / 8)));
+            touching.down = 0;
+          } else if (diff.x > 0) {
+            touching.up = 0;
+            touching.down = Math.min(1, Math.abs(diff.y / (windowHeight / 8)));
+          }
+
+          if (diff.x < 0) {
+            touching.left = Math.min(1, Math.abs(diff.x / (windowWidth / 8)));
+            touching.right = 0;
+          } else if (diff.x > 0) {
+            touching.left = 0;
+            touching.right = Math.min(1, Math.abs(diff.x / (windowWidth / 8)));
+          }
+        };
+
+        const touchend = e => {
+          touching.active = false;
+          touching.up = 0;
+          touching.down = 0;
+          touching.left = 0;
+          touching.right = 0;
+
+          window.removeEventListener('touchmove', touchmove);
+          window.removeEventListener('touchend', touchend);
+        };
+
+        window.addEventListener('touchmove', touchmove);
+        window.addEventListener('touchend', touchend);
+      });
+
+      setInterval(() => {
+        if (touching.active) {
+          if (touching.up) {
+            power += powerFactor * touching.up;
+          } else {
+            power -= powerFactor * 2;
+          }
+          if (touching.down) {
+            brakingPower += brakingFactor;
+          } else {
+            brakingPower -= brakingFactor * 2;
+          }
         } else {
-          brakingPower -= brakingFactor * 2;
+          if (keysDown[38]) {
+            power += powerFactor;
+          } else {
+            power -= powerFactor * 2;
+          }
+          if (keysDown[40]) {
+            brakingPower += brakingFactor;
+          } else {
+            brakingPower -= brakingFactor * 2;
+          }
         }
 
         power = Math.max(0, Math.min(maxPower, power));
@@ -89,11 +159,20 @@
         const direction = power > brakingPower ? 1 : -1;
 
         if (power || brakingPower) {
-          if (keysDown[37]) {
-            angularVelocity -= direction * turnSpeed;
-          }
-          if (keysDown[39]) {
-            angularVelocity += direction * turnSpeed;
+          if (touching.active) {
+            if (touching.left) {
+              angularVelocity -= direction * turnSpeed * touching.left;
+            }
+            if (touching.right) {
+              angularVelocity += direction * turnSpeed * touching.right;
+            }
+          } else {
+            if (keysDown[37]) {
+              angularVelocity -= direction * turnSpeed;
+            }
+            if (keysDown[39]) {
+              angularVelocity += direction * turnSpeed;
+            }
           }
         }
 
