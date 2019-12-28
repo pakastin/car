@@ -5,29 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car</title>
     <style>
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
       .scene {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 0;
+        left: 0;
       }
 
       #car {
         position: absolute;
-        top: -0.5rem;
-        left: -0.25rem;
-        width: 0.5rem;
-        height: 1rem;
-        background-color: #222;
+        top: -8px;
+        left: -4px;
+        width: 8px;
+        height: 16px;
+        background-color: #f60;
       }
     </style>
   </head>
   <body>
+    <canvas></canvas>
     <div class="scene">
       <div id="car"></div>
     </div>
     <script>
+      let windowWidth = window.innerWidth;
+      let windowHeight = window.innerHeight;
+  
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
       const car = document.getElementById('car');
 
+      const maxPower = 0.05;
+      const maxBrakingPower = 0.025;
       const powerFactor = 0.0001;
       const brakingFactor = 0.0002;
 
@@ -38,8 +52,8 @@
       let power = 0;
       let brakingPower = 0;
 
-      let positionX = 0;
-      let positionY = 0;
+      let positionX = windowWidth / 2;
+      let positionY = windowHeight / 2;
 
       let velocityX = 0;
       let velocityY = 0;
@@ -69,8 +83,8 @@
           brakingPower -= brakingFactor * 2;
         }
 
-        power = Math.max(0, Math.min(0.1, power));
-        brakingPower = Math.max(0, Math.min(0.05, brakingPower));
+        power = Math.max(0, Math.min(maxPower, power));
+        brakingPower = Math.max(0, Math.min(maxBrakingPower, brakingPower));
 
         const direction = power > brakingPower ? 1 : -1;
 
@@ -93,16 +107,16 @@
         angle += angularVelocity;
         angularVelocity *= angularDrag;
 
-        if (positionX > window.innerWidth / 2) {
-          positionX -= window.innerWidth;
-        } else if (positionX < -window.innerWidth / 2) {
-          positionX += window.innerWidth;
+        if (positionX > windowWidth) {
+          positionX -= windowWidth;
+        } else if (positionX < 0) {
+          positionX += windowWidth;
         }
 
-        if (positionY > window.innerHeight / 2) {
-          positionY -= window.innerHeight;
-        } else if (positionY < -window.innerHeight / 2) {
-          positionY += window.innerHeight;
+        if (positionY > windowHeight) {
+          positionY -= windowHeight;
+        } else if (positionY < 0) {
+          positionY += windowHeight;
         }
       }, 1 / 30);
 
@@ -110,9 +124,49 @@
         requestAnimationFrame(render);
 
         car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
+
+        if (power || brakingPower) {
+          ctx.save();
+          ctx.translate(positionX - Math.cos(angle) * 4, positionY - Math.sin(angle) * 4);
+          ctx.rotate(angle);
+          ctx.translate(-positionX, -positionY);
+          ctx.fillRect(
+            positionX,
+            positionY, 
+            1, 
+            1
+          );
+          ctx.restore();
+
+          ctx.save();
+          ctx.translate(positionX - Math.cos(Math.PI + angle) * 4, positionY - Math.sin(Math.PI + angle) * 4);
+          ctx.rotate(angle);
+          ctx.translate(-positionX, -positionY);
+          ctx.fillRect(
+            positionX,
+            positionY,
+            1,
+            1
+          );
+          ctx.restore();
+        }
       }
 
       render();
+
+      function resize () {
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
+
+        canvas.width = windowWidth;
+        canvas.height = windowHeight;
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      }
+
+      resize();
+
+      window.addEventListener('resize', resize);
     </script>
   </body>
 </html>
