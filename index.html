@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .scene {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+      }
+      #car {
+        position: absolute;
+        top: -0.5rem;
+        left: -0.25rem;
+        width: 0.5rem;
+        height: 1rem;
+        background-color: #222;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scene">
+      <div id="car"></div>
+    </div>
+    <script>
+      const car = document.getElementById('car');
+
+      const powerFactor = 0.0001;
+      const brakingFactor = 0.0002;
+
+      const drag = 0.95;
+      const angularDrag = 0.99;
+      const turnSpeed = 0.0002;
+
+      let power = 0;
+      let brakingPower = 0;
+
+      let positionX = 0;
+      let positionY = 0;
+
+      let velocityX = 0;
+      let velocityY = 0;
+
+      let angle = 0;
+      let angularVelocity = 0;
+
+      const keysDown = {};
+
+      window.addEventListener('keydown', e => {
+        keysDown[e.which] = true;
+      });
+
+      window.addEventListener('keyup', e => {
+        keysDown[e.which] = false;
+      });
+
+      setInterval(() => {
+        if (keysDown[38]) {
+          power += powerFactor;
+        } else {
+          power -= powerFactor * 2;
+        }
+        if (keysDown[40]) {
+          brakingPower += brakingFactor;
+        } else {
+          brakingPower -= brakingFactor * 2;
+        }
+
+        power = Math.max(0, Math.min(0.1, power));
+        brakingPower = Math.max(0, Math.min(0.05, brakingPower));
+
+        const direction = power > brakingPower ? 1 : -1;
+
+        if (power || brakingPower) {
+          if (keysDown[37]) {
+            angularVelocity -= direction * turnSpeed;
+          }
+          if (keysDown[39]) {
+            angularVelocity += direction * turnSpeed;
+          }
+        }
+
+        velocityX += Math.sin(angle) * (power - brakingPower);
+        velocityY += Math.cos(angle) * (power - brakingPower);
+
+        positionX += velocityX;
+        positionY -= velocityY;
+        velocityX *= drag;
+        velocityY *= drag;
+        angle += angularVelocity;
+        angularVelocity *= angularDrag;
+
+        if (positionX > window.innerWidth / 2) {
+          positionX -= window.innerWidth;
+        } else if (positionX < -window.innerWidth / 2) {
+          positionX += window.innerWidth;
+        }
+
+        if (positionY > window.innerHeight / 2) {
+          positionY -= window.innerHeight;
+        } else if (positionY < -window.innerHeight / 2) {
+          positionY += window.innerHeight;
+        }
+      }, 1 / 30);
+
+      function render () {
+        requestAnimationFrame(render);
+
+        car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
+      }
+
+      render();
+    </script>
+  </body>
+</html>
