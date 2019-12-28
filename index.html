@@ -77,6 +77,8 @@
       const touching = {};
 
       window.addEventListener('touchstart', e => {
+        e.preventDefault();
+
         if (touching.active) {
           return;
         }
@@ -97,19 +99,19 @@
           };
 
           if (diff.y < 0) {
-            touching.up = Math.min(1, Math.abs(diff.y / (windowHeight / 8)));
+            touching.up = Math.min(1, Math.abs(diff.y / (windowHeight / 10)));
             touching.down = 0;
           } else if (diff.x > 0) {
             touching.up = 0;
-            touching.down = Math.min(1, Math.abs(diff.y / (windowHeight / 8)));
+            touching.down = Math.min(1, Math.abs(diff.y / (windowHeight / 10)));
           }
 
           if (diff.x < 0) {
-            touching.left = Math.min(1, Math.abs(diff.x / (windowWidth / 8)));
+            touching.left = Math.min(1, Math.abs(diff.x / (windowWidth / 10)));
             touching.right = 0;
           } else if (diff.x > 0) {
             touching.left = 0;
-            touching.right = Math.min(1, Math.abs(diff.x / (windowWidth / 8)));
+            touching.right = Math.min(1, Math.abs(diff.x / (windowWidth / 10)));
           }
         };
 
