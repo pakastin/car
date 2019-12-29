@@ -147,23 +147,23 @@
           if (touching.up) {
             power += powerFactor * touching.up;
           } else {
-            power -= powerFactor * 2;
+            power -= powerFactor;
           }
           if (touching.down) {
             brakingPower += brakingFactor;
           } else {
-            brakingPower -= brakingFactor * 2;
+            brakingPower -= brakingFactor;
           }
         } else {
           if (keysDown[38]) {
             power += powerFactor;
           } else {
-            power -= powerFactor * 2;
+            power -= powerFactor;
           }
           if (keysDown[40]) {
             brakingPower += brakingFactor;
           } else {
-            brakingPower -= brakingFactor * 2;
+            brakingPower -= brakingFactor;
           }
         }
 
