@@ -69,6 +69,9 @@
 
       const keysDown = {};
 
+      let needResize;
+      let resizing;
+
       window.addEventListener('keydown', e => {
         keysDown[e.which] = true;
       });
@@ -207,6 +210,25 @@
       function render () {
         requestAnimationFrame(render);
 
+        if (needResize || resizing) {
+          needResize = false;
+          resizing = true;
+
+          const prevImage = new Image();
+          prevImage.src = canvas.toDataURL();
+
+          prevImage.onload = () => {
+            resizing = false;
+
+            canvas.width = windowWidth;
+            canvas.height = windowHeight;
+
+            ctx.fillStyle = 'rgba(32, 32, 32, 0.25)';
+
+            ctx.drawImage(prevImage, 0, 0);
+          };
+        }
+
         car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
 
         if (power || brakingPower) {
@@ -242,10 +264,7 @@
         windowWidth = window.innerWidth;
         windowHeight = window.innerHeight;
 
-        canvas.width = windowWidth;
-        canvas.height = windowHeight;
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        needResize = true;
       }
 
       resize();
