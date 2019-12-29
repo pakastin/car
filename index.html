@@ -80,7 +80,12 @@
         keysDown[e.which] = false;
       });
 
-      const touching = {};
+      const touching = {
+        up: 0,
+        down: 0,
+        left: 0,
+        right: 0
+      };
 
       window.addEventListener('touchstart', e => {
         e.preventDefault();
@@ -88,10 +93,9 @@
         if (touching.active) {
           return;
         }
-        e.preventDefault();
         touching.active = true;
 
-        const startPos = {
+        const prevPos = {
           x: e.touches[0].pageX,
           y: e.touches[0].pageY
         };
@@ -99,26 +103,28 @@
         const touchmove = e => {
           e.preventDefault();
 
-          const diff = {
-            x: e.touches[0].pageX - startPos.x,
-            y: e.touches[0].pageY - startPos.y
+          const pos = {
+            x: e.touches[0].pageX,
+            y: e.touches[0].pageY
           };
 
-          if (diff.y < 0) {
-            touching.up = Math.min(1, Math.abs(diff.y / (windowHeight / 10)));
-            touching.down = 0;
-          } else if (diff.x > 0) {
-            touching.up = 0;
-            touching.down = Math.min(1, Math.abs(diff.y / (windowHeight / 10)));
-          }
+          const diff = {
+            x: pos.x - prevPos.x,
+            y: pos.y - prevPos.y
+          };
 
-          if (diff.x < 0) {
-            touching.left = Math.min(1, Math.abs(diff.x / (windowWidth / 10)));
-            touching.right = 0;
-          } else if (diff.x > 0) {
-            touching.left = 0;
-            touching.right = Math.min(1, Math.abs(diff.x / (windowWidth / 10)));
-          }
+          prevPos.x = pos.x;
+          prevPos.y = pos.y;
+
+          touching.up -= diff.y / (windowHeight / 10);
+          touching.down += diff.y / (windowHeight / 10);
+          touching.left -= diff.x / (windowWidth / 10);
+          touching.right += diff.x / (windowWidth / 10);
+
+          touching.up = Math.max(0, Math.min(1, touching.up));
+          touching.down = Math.max(0, Math.min(1, touching.down));
+          touching.left = Math.max(0, Math.min(1, touching.left));
+          touching.right = Math.max(0, Math.min(1, touching.right));
         };
 
         const touchend = e => {
