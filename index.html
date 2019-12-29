@@ -27,7 +27,7 @@
         left: -4px;
         width: 8px;
         height: 16px;
-        background-color: #f60;
+        background-color: #f30;
         border-radius: 2px;
       }
     </style>
@@ -172,7 +172,7 @@
 
         const direction = power > brakingPower ? 1 : -1;
 
-        if (power || brakingPower) {
+        if (power > 0.0025 || brakingPower) {
           if (touching.active) {
             if (touching.left) {
               angularVelocity -= direction * turnSpeed * touching.left;
@@ -229,7 +229,7 @@
             canvas.width = windowWidth;
             canvas.height = windowHeight;
 
-            ctx.fillStyle = 'rgba(32, 32, 32, 0.25)';
+            ctx.fillStyle = 'rgba(64, 64, 64, 0.25)';
 
             ctx.drawImage(prevImage, 0, 0);
           };
@@ -237,7 +237,7 @@
 
         car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
 
-        if (power || brakingPower) {
+        if (power > 0.0025 || brakingPower) {
           ctx.save();
           ctx.translate(positionX - Math.cos(angle) * 4, positionY - Math.sin(angle) * 4);
           ctx.rotate(angle);
