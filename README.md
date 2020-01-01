@@ -8,4 +8,4 @@ Skidmarks are rendered with canvas and car is just a simple DIV element.
 
 Check out [my other projects](https://github.com/pakastin) and/or [sponsor me](https://github.com/sponsors/pakastin) to keep these coming! 😎
 
-Pull requests and ideas welcome! 🚗
+Multiplayer support coming, pull requests and ideas welcome! 🚗
