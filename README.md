@@ -1,5 +1,7 @@
 # Simple 2d car physics with JavaScript!
 
+https://pakastin.github.io/car
+
 Use keyboard (up, down, left, right) or touch screen (swipe up, down, left, right)
 
 All code [here](https://github.com/pakastin/car/blob/master/car.js)! Not real car physics, but a simple way to do nice little drifting 😛
