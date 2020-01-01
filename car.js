@@ -213,7 +213,7 @@ function render (ms) {
   car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
 
   if ((power > 0.0025) || brakingPower) {
-    if (((maxBrakingPower === brakingPower) || (maxPower === power)) && Math.abs(angularVelocity) < 0.001) {
+    if (((maxBrakingPower === brakingPower) || (maxPower === power)) && Math.abs(angularVelocity) < 0.002) {
       return;
     }
     ctx.save();
