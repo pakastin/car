@@ -33,10 +33,6 @@ canvas {
   background-color: #ff3300;
 }
 
-.car.ghost {
-  opacity: .25;
-}
-
 .buttons {
   position: absolute;
   left: 0;

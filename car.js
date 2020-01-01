@@ -379,10 +379,6 @@ socket.on('params', ({ id, params }) => {
     Body.rotate(car.matter, car.angle);
     Body.setAngularVelocity(car.matter, car.angularVelocity);
   }
-
-  if (params.ghost) {
-    car.el.classList.add('ghost');
-  }
 });
 
 socket.on('leave', (id) => {
