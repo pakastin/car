@@ -299,7 +299,7 @@ function render (ms) {
       canvas.width = windowWidth;
       canvas.height = windowHeight;
 
-      ctx.fillStyle = 'rgba(64, 64, 64, 0.25)';
+      ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
 
       ctx.drawImage(prevImage, 0, 0);
     };
@@ -424,3 +424,9 @@ const clearScreen = document.getElementsByTagName('button')[1];
 clearScreen.onclick = () => {
   ctx.clearRect(0, 0, windowWidth, windowHeight);
 };
+
+setInterval(() => {
+  ctx.fillStyle = 'rgba(255, 255, 255, .1)';
+  ctx.fillRect(0, 0, windowWidth, windowHeight);
+  ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
+}, 60000);
