@@ -454,7 +454,7 @@ clearScreen.onclick = () => {
 };
 
 setInterval(() => {
-  ctx.fillStyle = 'rgba(255, 255, 255, .1)';
+  ctx.fillStyle = 'rgba(255, 255, 255, .05)';
   ctx.fillRect(0, 0, windowWidth, windowHeight);
   ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
 }, 30000);
