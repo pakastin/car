@@ -50,6 +50,9 @@ const localCar = {
   isReversing: false
 };
 
+localCar.matter = Matter.Bodies.rectangle(localCar.x, localCar.y, 8, 16);
+Matter.Body.rotate(localCar.matter, localCar.angle);
+
 const cars = [localCar];
 const carsById = {};
 
@@ -353,6 +356,12 @@ socket.on('params', ({ id, params }) => {
     if (key !== 'el') {
       car[key] = params[key];
     }
+  }
+
+  if (!car.matter) {
+    car.matter = Matter.Bodies.rectangle(car.x, car.y, 8, 16);
+    Matter.Body.rotate(car.matter, car.angle);
+    Matter.Body.setAngularVelocity(car.matter, car.angularVelocity);
   }
 
   if (params.ghost) {
