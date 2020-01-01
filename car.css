@@ -14,12 +14,16 @@ canvas {
   left: 0;
 }
 
-#car {
+.car {
   position: absolute;
   top: -8px;
   left: -4px;
   width: 8px;
   height: 16px;
-  background-color: #ff3300;
   border-radius: 2px;
+  background-color: #0066ff;
+}
+
+.car.red {
+  background-color: #ff3300;
 }

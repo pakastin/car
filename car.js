@@ -1,16 +1,32 @@
-const KEY_CONTROLS_ARROWS = {
-  UP: 38,
-  DOWN: 40,
-  LEFT: 37,
-  RIGHT: 39
+// Physics
+
+const maxPower = 0.075;
+const maxReverse = 0.0375;
+const powerFactor = 0.001;
+const reverseFactor = 0.0005;
+
+const drag = 0.95;
+const angularDrag = 0.95;
+const turnSpeed = 0.002;
+
+// Key codes
+
+const arrowKeys = {
+  up: 38,
+  down: 40,
+  left: 37,
+  right: 39
 };
-const KEY_CONTROLS_WASD = {
-  UP: 87,
-  DOWN: 83,
-  LEFT: 65,
-  RIGHT: 68
+const wasdKeys = {
+  up: 87,
+  down: 83,
+  left: 65,
+  right: 68
 };
-const keyActive = (key, keysDown) => keysDown[KEY_CONTROLS_ARROWS[key]] || keysDown[KEY_CONTROLS_WASD[key]];
+
+const keyActive = (key) => {
+  return keysDown[arrowKeys[key]] || keysDown[wasdKeys[key]] || false;
+};
 
 let windowWidth = window.innerWidth;
 let windowHeight = window.innerHeight;
@@ -18,28 +34,24 @@ let windowHeight = window.innerHeight;
 const canvas = document.getElementsByTagName('canvas')[0];
 const ctx = canvas.getContext('2d');
 
-const car = document.getElementById('car');
+const scene = document.getElementsByClassName('scene')[0];
 
-const maxPower = 0.075;
-const maxBrakingPower = 0.0375;
-const powerFactor = 0.001;
-const brakingFactor = 0.0005;
+const car = {
+  el: document.getElementsByClassName('car')[0],
+  x: windowWidth / 2,
+  y: windowHeight / 2,
+  xVelocity: 0,
+  yVelocity: 0,
+  power: 0,
+  reverse: 0,
+  angle: 0,
+  angularVelocity: 0,
+  isThrottling: false,
+  isReversing: false
+};
 
-const drag = 0.95;
-const angularDrag = 0.95;
-const turnSpeed = 0.002;
-
-let power = 0;
-let brakingPower = 0;
-
-let positionX = windowWidth / 2;
-let positionY = windowHeight / 2;
-
-let velocityX = 0;
-let velocityY = 0;
-
-let angle = 0;
-let angularVelocity = 0;
+const cars = [car];
+const carsById = {};
 
 const keysDown = {};
 
@@ -116,80 +128,143 @@ window.addEventListener('touchstart', e => {
   window.addEventListener('touchend', touchend);
 });
 
+function updateCar (car, i) {
+  if (car.isThrottling) {
+    car.power += powerFactor * car.isThrottling;
+  } else {
+    car.power -= powerFactor;
+  }
+  if (car.isReversing) {
+    car.reverse += reverseFactor;
+  } else {
+    car.reverse -= reverseFactor;
+  }
+
+  car.power = Math.max(0, Math.min(maxPower, car.power));
+  car.reverse = Math.max(0, Math.min(maxReverse, car.reverse));
+
+  const direction = car.power > car.reverse ? 1 : -1;
+
+  if (car.isTurningLeft) {
+    car.angularVelocity -= direction * turnSpeed * car.isTurningLeft;
+  }
+  if (car.isTurningRight) {
+    car.angularVelocity += direction * turnSpeed * car.isTurningRight;
+  }
+
+  car.xVelocity += Math.sin(car.angle) * (car.power - car.reverse);
+  car.yVelocity += Math.cos(car.angle) * (car.power - car.reverse);
+
+  car.x += car.xVelocity;
+  car.y -= car.yVelocity;
+  car.xVelocity *= drag;
+  car.yVelocity *= drag;
+  car.angle += car.angularVelocity;
+  car.angularVelocity *= angularDrag;
+}
+
 function update () {
+  let changed;
+
+  const canTurn = car.power > 0.0025 || car.reverse;
+
   if (touching.active) {
-    if (touching.up) {
-      power += powerFactor * touching.up;
-    } else {
-      power -= powerFactor;
+    if (car.isThrottling !== touching.up || car.isReversing !== touching.down) {
+      changed = true;
+      car.isThrottling = touching.up;
+      car.isReversing = touching.down;
     }
-    if (touching.down) {
-      brakingPower += brakingFactor;
-    } else {
-      brakingPower -= brakingFactor;
+    const turnLeft = canTurn && touching.left;
+    const turnRight = canTurn && touching.right;
+
+    if (car.isTurningLeft !== turnLeft) {
+      changed = true;
+      car.isTurningLeft = turnLeft;
+    }
+    if (car.isTurningRight !== turnRight) {
+      changed = true;
+      car.isTurningRight = turnRight;
     }
   } else {
-    if (keyActive('UP', keysDown)) {
-      power += powerFactor;
-    } else {
-      power -= powerFactor;
+    const pressingUp = keyActive('up');
+    const pressingDown = keyActive('down');
+
+    if (car.isThrottling !== pressingUp || car.isReversing !== pressingDown) {
+      changed = true;
+      car.isThrottling = pressingUp;
+      car.isReversing = pressingDown;
     }
-    if (keyActive('DOWN', keysDown)) {
-      brakingPower += brakingFactor;
-    } else {
-      brakingPower -= brakingFactor;
+
+    const turnLeft = canTurn && keyActive('left');
+    const turnRight = canTurn && keyActive('right');
+
+    if (car.isTurningLeft !== turnLeft) {
+      changed = true;
+      car.isTurningLeft = turnLeft;
     }
-  }
-
-  power = Math.max(0, Math.min(maxPower, power));
-  brakingPower = Math.max(0, Math.min(maxBrakingPower, brakingPower));
-
-  const direction = power > brakingPower ? 1 : -1;
-
-  if (power > 0.0025 || brakingPower) {
-    if (touching.active) {
-      if (touching.left) {
-        angularVelocity -= direction * turnSpeed * touching.left;
-      }
-      if (touching.right) {
-        angularVelocity += direction * turnSpeed * touching.right;
-      }
-    } else {
-      if (keyActive('LEFT', keysDown)) {
-        angularVelocity -= direction * turnSpeed;
-      }
-      if (keyActive('RIGHT', keysDown)) {
-        angularVelocity += direction * turnSpeed;
-      }
+    if (car.isTurningRight !== turnRight) {
+      changed = true;
+      car.isTurningRight = turnRight;
     }
   }
 
-  velocityX += Math.sin(angle) * (power - brakingPower);
-  velocityY += Math.cos(angle) * (power - brakingPower);
+  cars.forEach(updateCar);
 
-  positionX += velocityX;
-  positionY -= velocityY;
-  velocityX *= drag;
-  velocityY *= drag;
-  angle += angularVelocity;
-  angularVelocity *= angularDrag;
-
-  if (positionX > windowWidth) {
-    positionX -= windowWidth;
-  } else if (positionX < 0) {
-    positionX += windowWidth;
+  if (car.x > windowWidth) {
+    car.x -= windowWidth;
+    changed = true;
+  } else if (car.x < 0) {
+    car.x += windowWidth;
+    changed = true;
   }
 
-  if (positionY > windowHeight) {
-    positionY -= windowHeight;
-  } else if (positionY < 0) {
-    positionY += windowHeight;
+  if (car.y > windowHeight) {
+    car.y -= windowHeight;
+    changed = true;
+  } else if (car.y < 0) {
+    car.y += windowHeight;
+    changed = true;
+  }
+
+  if (changed) {
+    sendParams(car);
   }
 }
 
 let lastTime;
 let acc = 0;
 const step = 1 / 120;
+
+function renderCar (car) {
+  const { x, y, angle, power, reverse, angularVelocity } = car;
+
+  car.el.style.transform = `translate(${x}px, ${y}px) rotate(${angle * 180 / Math.PI}deg)`;
+
+  if ((power > 0.0025) || reverse) {
+    if (((maxReverse === reverse) || (maxPower === power)) && Math.abs(angularVelocity) < 0.002) {
+      return;
+    }
+    ctx.save();
+    ctx.translate(x - Math.cos(angle) * 4, y - Math.sin(angle) * 4);
+    ctx.rotate(angle);
+    ctx.translate(-x, -y);
+    ctx.fillRect(
+      x, y,
+      1, 1
+    );
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(x - Math.cos(Math.PI + angle) * 4, y - Math.sin(Math.PI + angle) * 4);
+    ctx.rotate(angle);
+    ctx.translate(-x, -y);
+    ctx.fillRect(
+      x, y,
+      1, 1
+    );
+    ctx.restore();
+  }
+}
 
 function render (ms) {
   if (lastTime) {
@@ -224,36 +299,7 @@ function render (ms) {
     };
   }
 
-  car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
-
-  if ((power > 0.0025) || brakingPower) {
-    if (((maxBrakingPower === brakingPower) || (maxPower === power)) && Math.abs(angularVelocity) < 0.002) {
-      return;
-    }
-    ctx.save();
-    ctx.translate(positionX - Math.cos(angle) * 4, positionY - Math.sin(angle) * 4);
-    ctx.rotate(angle);
-    ctx.translate(-positionX, -positionY);
-    ctx.fillRect(
-      positionX,
-      positionY,
-      1,
-      1
-    );
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(positionX - Math.cos(Math.PI + angle) * 4, positionY - Math.sin(Math.PI + angle) * 4);
-    ctx.rotate(angle);
-    ctx.translate(-positionX, -positionY);
-    ctx.fillRect(
-      positionX,
-      positionY,
-      1,
-      1
-    );
-    ctx.restore();
-  }
+  cars.forEach(renderCar);
 }
 
 requestAnimationFrame(render);
@@ -268,3 +314,82 @@ function resize () {
 resize();
 
 window.addEventListener('resize', resize);
+
+const socket = io('https://car.pakastin.fi');
+
+socket.on('connect', () => {
+  sendParams(car);
+});
+
+socket.on('params', ({ id, params }) => {
+  let car = carsById[id];
+
+  if (!car) {
+    const el = document.createElement('div');
+    el.classList.add('car');
+    scene.appendChild(el);
+    car = {
+      el
+    };
+    carsById[id] = car;
+    cars.push(car);
+  }
+
+  for (const key in params) {
+    if (key !== 'el') {
+      car[key] = params[key];
+    }
+  }
+});
+
+socket.on('leave', (id) => {
+  const car = carsById[id];
+
+  if (!car) {
+    return console.error('Car not found');
+  }
+
+  for (let i = 0; i < cars.length; i++) {
+    if (cars[i] === car) {
+      cars.splice(i, 1);
+      break;
+    }
+  }
+
+  if (car.el.parentNode) {
+    car.el.parentNode.removeChild(car.el);
+  }
+  delete carsById[id];
+});
+
+function sendParams (car) {
+  const {
+    x,
+    y,
+    xVelocity,
+    yVelocity,
+    power,
+    reverse,
+    angle,
+    angularVelocity,
+    isThrottling,
+    isReversing,
+    isTurningLeft,
+    isTurningRight
+  } = car;
+
+  socket.emit('params', {
+    x,
+    y,
+    xVelocity,
+    yVelocity,
+    power,
+    reverse,
+    angle,
+    angularVelocity,
+    isThrottling,
+    isReversing,
+    isTurningLeft,
+    isTurningRight
+  });
+}
