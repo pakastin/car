@@ -1,0 +1,25 @@
+body {
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#car {
+  position: absolute;
+  top: -8px;
+  left: -4px;
+  width: 8px;
+  height: 16px;
+  background-color: #ff3300;
+  border-radius: 2px;
+}
