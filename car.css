@@ -28,3 +28,9 @@ canvas {
 .car.red {
   background-color: #ff3300;
 }
+
+button {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

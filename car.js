@@ -362,6 +362,20 @@ socket.on('leave', (id) => {
   delete carsById[id];
 });
 
+const disconnect = document.getElementsByTagName('button')[0];
+
+disconnect.onclick = () => {
+  socket.disconnect();
+
+  while (cars.length > 1) {
+    const car = cars.pop();
+
+    car.el.parentNode.removeChild(car.el);
+  }
+
+  disconnect.parentNode.removeChild(disconnect);
+};
+
 function sendParams (car) {
   const {
     x,
