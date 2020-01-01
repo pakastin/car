@@ -208,10 +208,13 @@ setInterval(() => {
   const canTurn = localCar.power > 0.0025 || localCar.reverse;
 
   if (touching.active) {
-    if (localCar.isThrottling !== touching.up || localCar.isReversing !== touching.down) {
+    const throttle = Math.round(touching.up * 10) / 10;
+    const reverse = Math.round(touching.down * 10) / 10;
+
+    if (localCar.isThrottling !== throttle || localCar.isReversing !== reverse) {
       changed = true;
-      localCar.isThrottling = touching.up;
-      localCar.isReversing = touching.down;
+      localCar.isThrottling = throttle;
+      localCar.isReversing = reverse;
     }
     const turnLeft = canTurn && Math.round(touching.left * 10) / 10;
     const turnRight = canTurn && Math.round(touching.right * 10) / 10;
