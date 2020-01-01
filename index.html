@@ -49,7 +49,7 @@
       const maxPower = 0.075;
       const maxBrakingPower = 0.0375;
       const powerFactor = 0.001;
-      const brakingFactor = 0.002;
+      const brakingFactor = 0.0005;
 
       const drag = 0.95;
       const angularDrag = 0.95;
@@ -253,7 +253,7 @@
         car.style.transform = `translate(${positionX}px, ${positionY}px) rotate(${angle * 180 / Math.PI}deg)`;
 
         if ((power > 0.0025) || brakingPower) {
-          if ((maxPower === power) && Math.abs(angularVelocity) < 0.001) {
+          if (((maxBrakingPower === brakingPower) || (maxPower === power)) && Math.abs(angularVelocity) < 0.001) {
             return;
           }
           ctx.save();
