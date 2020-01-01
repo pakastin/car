@@ -333,6 +333,10 @@ socket.on('connect', () => {
   sendParams(car);
 });
 
+socket.on('join', () => {
+  sendParams(car);
+});
+
 socket.on('params', ({ id, params }) => {
   let car = carsById[id];
 
