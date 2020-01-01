@@ -410,3 +410,23 @@ function sendParams (car) {
     isTurningRight
   });
 }
+
+const disconnect = document.getElementsByTagName('button')[0];
+
+disconnect.onclick = () => {
+  socket.disconnect();
+
+  while (cars.length > 1) {
+    const car = cars.pop();
+
+    car.el.parentNode.removeChild(car.el);
+  }
+
+  disconnect.parentNode.removeChild(disconnect);
+};
+
+const clearScreen = document.getElementsByTagName('button')[1];
+
+clearScreen.onclick = () => {
+  ctx.clearRect(0, 0, windowWidth, windowHeight);
+};

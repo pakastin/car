@@ -32,7 +32,7 @@ canvas {
   background-color: #ff3300;
 }
 
-button {
+.buttons {
   position: absolute;
   left: 0;
   top: 0;
