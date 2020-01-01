@@ -267,25 +267,19 @@ function renderCar (car) {
     if (((maxReverse === reverse) || (maxPower === power)) && Math.abs(angularVelocity) < 0.002) {
       return;
     }
-    ctx.save();
-    ctx.translate(x - Math.cos(angle) * 4, y - Math.sin(angle) * 4);
-    ctx.rotate(angle);
-    ctx.translate(-x, -y);
     ctx.fillRect(
-      x, y,
-      1, 1
+      x + Math.cos(angle + 2 * Math.PI / 2) * 4,
+      y + Math.sin(angle + 2 * Math.PI / 2) * 4,
+      1,
+      1
     );
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(x - Math.cos(Math.PI + angle) * 4, y - Math.sin(Math.PI + angle) * 4);
-    ctx.rotate(angle);
-    ctx.translate(-x, -y);
     ctx.fillRect(
-      x, y,
-      1, 1
+      x + Math.cos(angle + 4 * Math.PI / 2) * 4,
+      y + Math.sin(angle + 4 * Math.PI / 2) * 4,
+      1,
+      1
     );
-    ctx.restore();
+    ctx.stroke();
   }
 }
 
@@ -305,7 +299,7 @@ function render (ms) {
       canvas.width = windowWidth;
       canvas.height = windowHeight;
 
-      ctx.fillStyle = 'rgba(64, 64, 64, 0.25)';
+      ctx.strokeStyle = 'rgba(64, 64, 64, 0.25)';
 
       ctx.drawImage(prevImage, 0, 0);
     };
