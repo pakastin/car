@@ -235,6 +235,12 @@ let lastTime;
 let acc = 0;
 const step = 1 / 120;
 
+function randomizeCarColour(carEl) {
+  const colour = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+  
+  carEl.style.background = colour;
+}
+
 function renderCar (car) {
   const { x, y, angle, power, reverse, angularVelocity } = car;
 
@@ -333,6 +339,7 @@ socket.on('params', ({ id, params }) => {
     };
     carsById[id] = car;
     cars.push(car);
+    el.addEventListener('click', () => randomizeCarColour(el));
   }
 
   for (const key in params) {
@@ -361,20 +368,6 @@ socket.on('leave', (id) => {
   }
   delete carsById[id];
 });
-
-const disconnect = document.getElementsByTagName('button')[0];
-
-disconnect.onclick = () => {
-  socket.disconnect();
-
-  while (cars.length > 1) {
-    const car = cars.pop();
-
-    car.el.parentNode.removeChild(car.el);
-  }
-
-  disconnect.parentNode.removeChild(disconnect);
-};
 
 function sendParams (car) {
   const {
