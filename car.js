@@ -235,10 +235,10 @@ let lastTime;
 let acc = 0;
 const step = 1 / 120;
 
-function randomizeCarColour(carEl) {
-  const colour = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-  
-  carEl.style.background = colour;
+function randomizeCarColour (el) {
+  const colour = `hsl(${Math.floor(Math.random() * 16 * 16)}, 75%, 50%)`;
+
+  el.style.background = colour;
 }
 
 function renderCar (car) {
