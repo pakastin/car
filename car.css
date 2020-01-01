@@ -22,6 +22,7 @@ canvas {
   height: 16px;
   border-radius: 2px;
   background-color: #0066ff;
+  will-change: transform;
 }
 
 .car.red {
