@@ -1,3 +1,3 @@
 # Simple 2d car physics with JavaScript!
 
-All code [here](https://github.com/pakastin/car/blob/master/car.js)
+All code [here](https://github.com/pakastin/car/blob/master/car.js)! Check out my [other projects](https://pakastin.fi)
