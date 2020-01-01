@@ -102,10 +102,10 @@ window.addEventListener('touchstart', e => {
     prevPos.x = pos.x;
     prevPos.y = pos.y;
 
-    touching.up -= diff.y / (windowHeight / 3);
-    touching.down += diff.y / (windowHeight / 3);
-    touching.left -= diff.x / (windowWidth / 3);
-    touching.right += diff.x / (windowWidth / 3);
+    touching.up -= Math.round(diff.y / (windowHeight / 3) * 10) / 10;
+    touching.down += Math.round(diff.y / (windowHeight / 3) * 10) / 10;
+    touching.left -= Math.round(diff.x / (windowWidth / 3) * 10) / 10;
+    touching.right += Math.round(diff.x / (windowWidth / 3) * 10) / 10;
 
     touching.up = Math.max(0, Math.min(1, touching.up));
     touching.down = Math.max(0, Math.min(1, touching.down));
