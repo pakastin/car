@@ -36,7 +36,7 @@ const ctx = canvas.getContext('2d');
 
 const scene = document.getElementsByClassName('scene')[0];
 
-const car = {
+const localCar = {
   el: document.getElementsByClassName('car')[0],
   x: windowWidth / 2,
   y: windowHeight / 2,
@@ -50,7 +50,7 @@ const car = {
   isReversing: false
 };
 
-const cars = [car];
+const cars = [localCar];
 const carsById = {};
 
 const keysDown = {};
@@ -187,68 +187,68 @@ setInterval(() => {
 
   let changed;
 
-  const canTurn = car.power > 0.0025 || car.reverse;
+  const canTurn = localCar.power > 0.0025 || localCar.reverse;
 
   if (touching.active) {
-    if (car.isThrottling !== touching.up || car.isReversing !== touching.down) {
+    if (localCar.isThrottling !== touching.up || localCar.isReversing !== touching.down) {
       changed = true;
-      car.isThrottling = touching.up;
-      car.isReversing = touching.down;
+      localCar.isThrottling = touching.up;
+      localCar.isReversing = touching.down;
     }
     const turnLeft = canTurn && touching.left;
     const turnRight = canTurn && touching.right;
 
-    if (car.isTurningLeft !== turnLeft) {
+    if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
-      car.isTurningLeft = turnLeft;
+      localCar.isTurningLeft = turnLeft;
     }
-    if (car.isTurningRight !== turnRight) {
+    if (localCar.isTurningRight !== turnRight) {
       changed = true;
-      car.isTurningRight = turnRight;
+      localCar.isTurningRight = turnRight;
     }
   } else {
     const pressingUp = keyActive('up');
     const pressingDown = keyActive('down');
 
-    if (car.isThrottling !== pressingUp || car.isReversing !== pressingDown) {
+    if (localCar.isThrottling !== pressingUp || localCar.isReversing !== pressingDown) {
       changed = true;
-      car.isThrottling = pressingUp;
-      car.isReversing = pressingDown;
+      localCar.isThrottling = pressingUp;
+      localCar.isReversing = pressingDown;
     }
 
     const turnLeft = canTurn && keyActive('left');
     const turnRight = canTurn && keyActive('right');
 
-    if (car.isTurningLeft !== turnLeft) {
+    if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
-      car.isTurningLeft = turnLeft;
+      localCar.isTurningLeft = turnLeft;
     }
-    if (car.isTurningRight !== turnRight) {
+    if (localCar.isTurningRight !== turnRight) {
       changed = true;
-      car.isTurningRight = turnRight;
+      localCar.isTurningRight = turnRight;
     }
   }
 
   cars.forEach(updateCar);
 
-  if (car.x > windowWidth) {
-    car.x -= windowWidth;
+  if (localCar.x > windowWidth) {
+    localCar.x -= windowWidth;
     changed = true;
-  } else if (car.x < 0) {
-    car.x += windowWidth;
+  } else if (localCar.x < 0) {
+    localCar.x += windowWidth;
     changed = true;
   }
 
-  if (car.y > windowHeight) {
-    car.y -= windowHeight;
+  if (localCar.y > windowHeight) {
+    localCar.y -= windowHeight;
     changed = true;
-  } else if (car.y < 0) {
-    car.y += windowHeight;
+  } else if (localCar.y < 0) {
+    localCar.y += windowHeight;
     changed = true;
   }
 
   if (changed) {
-    sendParams(car);
+    sendParams(localCar);
   }
 }, 1000 / 60);
 
@@ -330,11 +330,11 @@ window.addEventListener('resize', resize);
 const socket = io('https://car.pakastin.fi');
 
 socket.on('connect', () => {
-  sendParams(car);
+  sendParams(localCar);
 });
 
 socket.on('join', () => {
-  sendParams(car);
+  sendParams(localCar);
 });
 
 socket.on('params', ({ id, params }) => {
@@ -343,7 +343,7 @@ socket.on('params', ({ id, params }) => {
   if (!car) {
     const el = document.createElement('div');
     el.classList.add('car');
-    scene.appendChild(el);
+    scene.insertBefore(el, localCar.el);
     car = {
       el
     };
