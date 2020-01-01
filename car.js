@@ -351,6 +351,10 @@ socket.on('params', ({ id, params }) => {
       car[key] = params[key];
     }
   }
+
+  if (params.ghost) {
+    car.el.classList.add('ghost');
+  }
 });
 
 socket.on('leave', (id) => {
@@ -429,4 +433,4 @@ setInterval(() => {
   ctx.fillStyle = 'rgba(255, 255, 255, .1)';
   ctx.fillRect(0, 0, windowWidth, windowHeight);
   ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
-}, 60000);
+}, 30000);
