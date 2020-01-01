@@ -1,3 +1,5 @@
+const { Engine, World, Body, Bodies } = Matter;
+
 // Physics
 
 const maxPower = 0.075;
@@ -8,6 +10,17 @@ const reverseFactor = 0.0005;
 const drag = 0.95;
 const angularDrag = 0.95;
 const turnSpeed = 0.002;
+
+const engine = Engine.create({
+  world: World.create({
+    gravity: {
+      x: 0,
+      y: 0
+    }
+  })
+});
+
+const world = engine.world;
 
 // Key codes
 
@@ -50,8 +63,10 @@ const localCar = {
   isReversing: false
 };
 
-localCar.matter = Matter.Bodies.rectangle(localCar.x, localCar.y, 8, 16);
-Matter.Body.rotate(localCar.matter, localCar.angle);
+localCar.matter = Bodies.rectangle(localCar.x, localCar.y, 8, 16);
+Body.rotate(localCar.matter, localCar.angle);
+
+World.addBody(world, localCar.matter);
 
 const cars = [localCar];
 const carsById = {};
@@ -359,9 +374,9 @@ socket.on('params', ({ id, params }) => {
   }
 
   if (!car.matter) {
-    car.matter = Matter.Bodies.rectangle(car.x, car.y, 8, 16);
-    Matter.Body.rotate(car.matter, car.angle);
-    Matter.Body.setAngularVelocity(car.matter, car.angularVelocity);
+    car.matter = Bodies.rectangle(car.x, car.y, 8, 16);
+    Body.rotate(car.matter, car.angle);
+    Body.setAngularVelocity(car.matter, car.angularVelocity);
   }
 
   if (params.ghost) {
