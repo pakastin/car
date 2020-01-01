@@ -187,22 +187,9 @@ function update () {
 
 let lastTime;
 let acc = 0;
-const step = 1 / 60;
+const step = 1 / 120;
 
 setInterval(() => {
-  const ms = Date.now();
-  if (lastTime) {
-    acc += (ms - lastTime) / 1000;
-
-    while (acc > step) {
-      update();
-
-      acc -= step;
-    }
-  }
-
-  lastTime = ms;
-
   let changed;
 
   const canTurn = localCar.power > 0.0025 || localCar.reverse;
@@ -250,8 +237,6 @@ setInterval(() => {
     }
   }
 
-  cars.forEach(updateCar);
-
   if (localCar.x > windowWidth) {
     localCar.x -= windowWidth;
     changed = true;
@@ -267,6 +252,19 @@ setInterval(() => {
     localCar.y += windowHeight;
     changed = true;
   }
+
+  const ms = Date.now();
+  if (lastTime) {
+    acc += (ms - lastTime) / 1000;
+
+    while (acc > step) {
+      update();
+
+      acc -= step;
+    }
+  }
+
+  lastTime = ms;
 
   if (changed) {
     sendParams(localCar);
