@@ -1,3 +1,17 @@
+const KEY_CONTROLS_ARROWS = {
+  UP: 38,
+  DOWN: 40,
+  LEFT: 37,
+  RIGHT: 39
+};
+const KEY_CONTROLS_WASD = {
+  UP: 87,
+  DOWN: 83,
+  LEFT: 65,
+  RIGHT: 68
+};
+const keyActive = (key, keysDown) => keysDown[KEY_CONTROLS_ARROWS[key]] || keysDown[KEY_CONTROLS_WASD[key]];
+
 let windowWidth = window.innerWidth;
 let windowHeight = window.innerHeight;
 
@@ -115,12 +129,12 @@ function update () {
       brakingPower -= brakingFactor;
     }
   } else {
-    if (keysDown[38]) {
+    if (keyActive('UP', keysDown)) {
       power += powerFactor;
     } else {
       power -= powerFactor;
     }
-    if (keysDown[40]) {
+    if (keyActive('DOWN', keysDown)) {
       brakingPower += brakingFactor;
     } else {
       brakingPower -= brakingFactor;
@@ -141,10 +155,10 @@ function update () {
         angularVelocity += direction * turnSpeed * touching.right;
       }
     } else {
-      if (keysDown[37]) {
+      if (keyActive('LEFT', keysDown)) {
         angularVelocity -= direction * turnSpeed;
       }
-      if (keysDown[39]) {
+      if (keyActive('RIGHT', keysDown)) {
         angularVelocity += direction * turnSpeed;
       }
     }
