@@ -164,6 +164,27 @@ function updateCar (car, i) {
 }
 
 function update () {
+  cars.forEach(updateCar);
+}
+
+let lastTime;
+let acc = 0;
+const step = 1 / 60;
+
+setInterval(() => {
+  const ms = Date.now();
+  if (lastTime) {
+    acc += (ms - lastTime) / 1000;
+
+    while (acc > step) {
+      update();
+
+      acc -= step;
+    }
+  }
+
+  lastTime = ms;
+
   let changed;
 
   const canTurn = car.power > 0.0025 || car.reverse;
@@ -189,7 +210,7 @@ function update () {
     const pressingUp = keyActive('up');
     const pressingDown = keyActive('down');
 
-    if (car.isThrottling !== pressingUp || car.isReversing !== pressingDown) {
+    if (car.isThrottling !== pressingUp || car.isReversing !== pressingDown) {
       changed = true;
       car.isThrottling = pressingUp;
       car.isReversing = pressingDown;
@@ -229,11 +250,7 @@ function update () {
   if (changed) {
     sendParams(car);
   }
-}
-
-let lastTime;
-let acc = 0;
-const step = 1 / 120;
+}, 1000 / 60);
 
 function renderCar (car) {
   const { x, y, angle, power, reverse, angularVelocity } = car;
@@ -267,17 +284,6 @@ function renderCar (car) {
 }
 
 function render (ms) {
-  if (lastTime) {
-    acc += (ms - lastTime) / 1000;
-
-    while (acc > step) {
-      update();
-
-      acc -= step;
-    }
-  }
-
-  lastTime = ms;
   requestAnimationFrame(render);
 
   if (needResize || resizing) {
