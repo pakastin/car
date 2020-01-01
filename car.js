@@ -288,21 +288,24 @@ function render (ms) {
 
   if (needResize || resizing) {
     needResize = false;
-    resizing = true;
 
-    const prevImage = new Image();
-    prevImage.src = canvas.toDataURL();
+    if (!resizing) {
+      resizing = true;
 
-    prevImage.onload = () => {
-      resizing = false;
+      const prevImage = new Image();
+      prevImage.src = canvas.toDataURL();
 
-      canvas.width = windowWidth;
-      canvas.height = windowHeight;
+      prevImage.onload = () => {
+        resizing = false;
 
-      ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
+        canvas.width = windowWidth;
+        canvas.height = windowHeight;
 
-      ctx.drawImage(prevImage, 0, 0);
-    };
+        ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
+
+        ctx.drawImage(prevImage, 0, 0);
+      };
+    }
   }
 
   cars.forEach(renderCar);
