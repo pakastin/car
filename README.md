@@ -1,4 +1,4 @@
-# Simple 2d car physics with JavaScript!
+# Multiplayer 2d car physics with JavaScript!
 
 https://pakastin.github.io/car
 
