@@ -299,7 +299,7 @@ function render (ms) {
       canvas.width = windowWidth;
       canvas.height = windowHeight;
 
-      ctx.strokeStyle = 'rgba(64, 64, 64, 0.25)';
+      ctx.fillStyle = 'rgba(64, 64, 64, 0.25)';
 
       ctx.drawImage(prevImage, 0, 0);
     };
