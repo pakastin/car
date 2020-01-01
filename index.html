@@ -46,14 +46,14 @@
 
       const car = document.getElementById('car');
 
-      const maxPower = 0.0375;
-      const maxBrakingPower = 0.01875;
-      const powerFactor = 0.0001;
-      const brakingFactor = 0.0002;
+      const maxPower = 0.075;
+      const maxBrakingPower = 0.0375;
+      const powerFactor = 0.0375;
+      const brakingFactor = 0.075;
 
       const drag = 0.95;
-      const angularDrag = 0.98;
-      const turnSpeed = 0.0004;
+      const angularDrag = 0.95;
+      const turnSpeed = 0.002;
 
       let power = 0;
       let brakingPower = 0;
@@ -142,7 +142,7 @@
         window.addEventListener('touchend', touchend);
       });
 
-      setInterval(() => {
+      function update () {
         if (touching.active) {
           if (touching.up) {
             power += powerFactor * touching.up;
@@ -211,9 +211,24 @@
         } else if (positionY < 0) {
           positionY += windowHeight;
         }
-      }, 1 / 30);
+      }
 
-      function render () {
+      let lastTime;
+      let acc = 0;
+      const step = 1 / 120;
+
+      function render (ms) {
+        if (lastTime) {
+          acc += (ms - lastTime) / 1000;
+
+          while (acc > step) {
+            update();
+
+            acc -= step;
+          }
+        }
+
+        lastTime = ms;
         requestAnimationFrame(render);
 
         if (needResize || resizing) {
@@ -264,7 +279,7 @@
         }
       }
 
-      render();
+      requestAnimationFrame(render);
 
       function resize () {
         windowWidth = window.innerWidth;
