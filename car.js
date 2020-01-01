@@ -268,14 +268,14 @@ function renderCar (car) {
       return;
     }
     ctx.fillRect(
-      x - Math.cos(angle + 3 * Math.PI / 2) * 4 + Math.cos(angle + 2 * Math.PI / 2) * 4,
-      y - Math.sin(angle + 3 * Math.PI / 2) * 4 + Math.sin(angle + 2 * Math.PI / 2) * 4,
+      x - Math.cos(angle + 3 * Math.PI / 2) * 3 + Math.cos(angle + 2 * Math.PI / 2) * 4,
+      y - Math.sin(angle + 3 * Math.PI / 2) * 3 + Math.sin(angle + 2 * Math.PI / 2) * 4,
       1,
       1
     );
     ctx.fillRect(
-      x - Math.cos(angle + 3 * Math.PI / 2) * 4 + Math.cos(angle + 4 * Math.PI / 2) * 4,
-      y - Math.sin(angle + 3 * Math.PI / 2) * 4 + Math.sin(angle + 4 * Math.PI / 2) * 4,
+      x - Math.cos(angle + 3 * Math.PI / 2) * 3 + Math.cos(angle + 4 * Math.PI / 2) * 4,
+      y - Math.sin(angle + 3 * Math.PI / 2) * 3 + Math.sin(angle + 4 * Math.PI / 2) * 4,
       1,
       1
     );
