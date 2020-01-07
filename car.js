@@ -282,7 +282,6 @@ function renderCar (car) {
       1,
       1
     );
-    ctx.stroke();
   }
 }
 
@@ -350,6 +349,10 @@ socket.on('params', ({ id, params }) => {
     carsById[id] = car;
     cars.push(car);
     el.addEventListener('click', () => randomizeCarColour(el));
+  }
+
+  if (params.ghost) {
+    car.el.classList.add('ghost');
   }
 
   for (const key in params) {
