@@ -1,4 +1,4 @@
-const { Engine, World, Body, Bodies } = Matter;
+/* global Image, requestAnimationFrame, io */
 
 // Physics
 
@@ -10,17 +10,6 @@ const reverseFactor = 0.0005;
 const drag = 0.95;
 const angularDrag = 0.95;
 const turnSpeed = 0.002;
-
-const engine = Engine.create({
-  world: World.create({
-    gravity: {
-      x: 0,
-      y: 0
-    }
-  })
-});
-
-const world = engine.world;
 
 // Key codes
 
@@ -62,11 +51,6 @@ const localCar = {
   isThrottling: false,
   isReversing: false
 };
-
-localCar.matter = Bodies.rectangle(localCar.x, localCar.y, 8, 16);
-Body.rotate(localCar.matter, localCar.angle);
-
-World.addBody(world, localCar.matter);
 
 const cars = [localCar];
 const carsById = {};
@@ -372,12 +356,6 @@ socket.on('params', ({ id, params }) => {
     if (key !== 'el') {
       car[key] = params[key];
     }
-  }
-
-  if (!car.matter) {
-    car.matter = Bodies.rectangle(car.x, car.y, 8, 16);
-    Body.rotate(car.matter, car.angle);
-    Body.setAngularVelocity(car.matter, car.angularVelocity);
   }
 });
 
