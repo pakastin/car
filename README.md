@@ -13,3 +13,5 @@ Check out [my other projects](https://github.com/pakastin) and/or [sponsor me](h
 Web socket server: https://github.com/pakastin/car-ws
 
 https://news.ycombinator.com/item?id=21927076
+
+https://github.com/manassarpatwar/Self-driving-AI
