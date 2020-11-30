@@ -1,6 +1,6 @@
 # Multiplayer 2d car physics with JavaScript!
 
-https://pakastin.github.io/car
+https://car.js.org
 
 Use keyboard (up, down, left, right) or touch screen (swipe up, down, left, right)
 
