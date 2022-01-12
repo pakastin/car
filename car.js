@@ -130,6 +130,35 @@ window.addEventListener('touchstart', e => {
   window.addEventListener('touchend', touchend);
 });
 
+// handle gamepad keys
+let gamepad; // keep track of active gamepad
+const gamepadKeys = {}; // keep track of mapped gamepad keys
+
+// detect when gamepad is connected
+window.addEventListener('gamepadconnected', (e) => {
+  const getGamepadInput = () => {
+    const gamepadIndex = e.gamepad.index;
+    gamepad = navigator.getGamepads()[gamepadIndex];
+
+    // map gamepad keys to game
+    if (gamepad) {
+      // A [xbox] or X [playstation]
+      gamepadKeys.up = gamepad.buttons[0].pressed;
+      // B [xbox] or O [playstation]
+      gamepadKeys.down = gamepad.buttons[1].pressed;
+      // left axes or directional left
+      gamepadKeys.left = gamepad.buttons[14].pressed || gamepad.axes[0] === -1;
+      // right axes or directional right
+      gamepadKeys.right = gamepad.buttons[15].pressed || gamepad.axes[0] === 1;
+    }
+
+    requestAnimationFrame(getGamepadInput);
+  }
+
+  // run getGamePadInput every animation frame handled by browser
+  requestAnimationFrame(getGamepadInput);
+});
+
 function updateCar (car, i) {
   if (car.isThrottling) {
     car.power += powerFactor * car.isThrottling;
@@ -199,8 +228,8 @@ setInterval(() => {
       localCar.isTurningRight = turnRight;
     }
   } else {
-    const pressingUp = keyActive('up');
-    const pressingDown = keyActive('down');
+    const pressingUp = keyActive('up') || gamepadKeys.up;
+    const pressingDown = keyActive('down') || gamepadKeys.down;
 
     if (localCar.isThrottling !== pressingUp || localCar.isReversing !== pressingDown) {
       changed = true;
@@ -208,8 +237,8 @@ setInterval(() => {
       localCar.isReversing = pressingDown;
     }
 
-    const turnLeft = canTurn && keyActive('left');
-    const turnRight = canTurn && keyActive('right');
+    const turnLeft = canTurn && keyActive('left') || canTurn && gamepadKeys.left;
+    const turnRight = canTurn && keyActive('right') || canTurn && gamepadKeys.right;
 
     if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
