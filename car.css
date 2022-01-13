@@ -27,7 +27,6 @@ canvas {
   height: 16px;
   border-radius: 2px;
   background-color: #0066ff;
-  will-change: transform;
 }
 
 .car.red {
@@ -36,6 +35,16 @@ canvas {
 
 .car.ghost {
   opacity: .5;
+}
+
+.bullet {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background-color: #222;
 }
 
 .buttons {

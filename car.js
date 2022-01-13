@@ -17,7 +17,8 @@ const arrowKeys = {
   up: 38,
   down: 40,
   left: 37,
-  right: 39
+  right: 39,
+  space: 32
 };
 const wasdKeys = {
   up: 87,
@@ -37,6 +38,7 @@ const canvas = document.getElementsByTagName('canvas')[0];
 const ctx = canvas.getContext('2d');
 
 const scene = document.getElementsByClassName('scene')[0];
+const bulletsScene = document.getElementsByClassName('bullets')[0];
 
 const localCar = {
   el: document.getElementsByClassName('car')[0],
@@ -49,11 +51,14 @@ const localCar = {
   angle: 0,
   angularVelocity: 0,
   isThrottling: false,
-  isReversing: false
+  isReversing: false,
+  isShooting: false
 };
 
 const cars = [localCar];
 const carsById = {};
+
+const bullets = [];
 
 const keysDown = {};
 
@@ -172,7 +177,8 @@ function updateGamepads () {
           buttons[15].value,
           (axes[0] > 0 ? axes[0] : 0),
           (axes[2] > 0 ? axes[2] : 0)
-        )
+        ),
+        space: buttons[2].value
       };
       currentGamepad.active = (() => {
         const { up, down, left, right } = currentGamepad;
@@ -220,10 +226,42 @@ function updateCar (car, i) {
   car.yVelocity *= drag;
   car.angle += car.angularVelocity;
   car.angularVelocity *= angularDrag;
+
+  if (car.isShooting) {
+    if (!car.lastShootAt || car.lastShootAt < Date.now() - 100) {
+      car.lastShootAt = Date.now();
+      const { x, y, angle, xVelocity, yVelocity } = car;
+      const el = document.createElement('div');
+      el.classList.add('bullet');
+      bulletsScene.appendChild(el);
+      bullets.push({
+        el,
+        x: x + Math.sin(angle) * 10,
+        y: y - Math.cos(angle) * 10,
+        angle,
+        xVelocity: xVelocity + Math.sin(angle) * 1,
+        yVelocity: yVelocity + Math.cos(angle) * 1,
+        shootAt: Date.now()
+      });
+    }
+  }
 }
 
 function update () {
+  const now = Date.now();
   cars.forEach(updateCar);
+
+  for (let i = 0; i < bullets.length; i++) {
+    const bullet = bullets[i];
+
+    if (bullet.shootAt < now - 1000) {
+      bulletsScene.removeChild(bullet.el);
+      bullets.splice(i--, 1);
+    } else {
+      bullet.x += bullet.xVelocity;
+      bullet.y -= bullet.yVelocity;
+    }
+  }
 }
 
 let lastTime;
@@ -249,6 +287,8 @@ setInterval(() => {
     const turnLeft = canTurn && Math.round(gamepad.left * 10) / 10;
     const turnRight = canTurn && Math.round(gamepad.right * 10) / 10;
 
+    localCar.isShooting = gamepad.space;
+
     if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
       localCar.isTurningLeft = turnLeft;
@@ -260,12 +300,15 @@ setInterval(() => {
   } else {
     const pressingUp = keyActive('up');
     const pressingDown = keyActive('down');
+    const pressingSpace = keyActive('space');
 
     if (localCar.isThrottling !== pressingUp || localCar.isReversing !== pressingDown) {
       changed = true;
       localCar.isThrottling = pressingUp;
       localCar.isReversing = pressingDown;
     }
+
+    localCar.isShooting = pressingSpace;
 
     const turnLeft = canTurn && keyActive('left');
     const turnRight = canTurn && keyActive('right');
@@ -370,6 +413,10 @@ function render (ms) {
   }
 
   cars.forEach(renderCar);
+  bullets.forEach(bullet => {
+    const { x, y } = bullet;
+    bullet.el.style.transform = `translate(${x}px, ${y}px)`;
+  });
 }
 
 requestAnimationFrame(render);
@@ -455,6 +502,7 @@ function sendParams (car) {
     angularVelocity,
     isThrottling,
     isReversing,
+    isShooting,
     isTurningLeft,
     isTurningRight
   } = car;
@@ -470,6 +518,7 @@ function sendParams (car) {
     angularVelocity,
     isThrottling,
     isReversing,
+    isShooting,
     isTurningLeft,
     isTurningRight
   });
