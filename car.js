@@ -77,7 +77,8 @@ const touching = {
   up: 0,
   down: 0,
   left: 0,
-  right: 0
+  right: 0,
+  space: 0
 };
 
 window.addEventListener('touchstart', e => {
@@ -113,6 +114,8 @@ window.addEventListener('touchstart', e => {
     touching.down += diff.y / (windowHeight / 3);
     touching.left -= diff.x / (windowWidth / 3);
     touching.right += diff.x / (windowWidth / 3);
+
+    touching.space = e.touches[1] != null;
 
     touching.up = Math.max(0, Math.min(1, touching.up));
     touching.down = Math.max(0, Math.min(1, touching.down));

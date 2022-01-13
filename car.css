@@ -2,6 +2,8 @@ body {
   overflow: hidden;
   background-color: #eee;
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+  touch-action: none;
+  user-select: none;
 }
 
 canvas {
