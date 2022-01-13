@@ -388,7 +388,10 @@ setInterval(() => {
     const bullet = bullets[i];
 
     if (bullet && circlesHit({ x: localCar.x, y: localCar.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
-      localCar.isHit = true;
+      localCar.x = Math.random() * window.innerWidth;
+      localCar.y = Math.random() * window.innerHeight;
+      localCar.xVelocity = 0;
+      localCar.yVelocity = 0;
       changed = true;
     }
   }
