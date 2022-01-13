@@ -130,34 +130,42 @@ window.addEventListener('touchstart', e => {
   window.addEventListener('touchend', touchend);
 });
 
-// handle gamepad keys
-let gamepad; // keep track of active gamepad
-const gamepadKeys = {}; // keep track of mapped gamepad keys
+const navigatorGamepads = {};
+const gamepads = {};
 
-// detect when gamepad is connected
-window.addEventListener('gamepadconnected', (e) => {
-  const getGamepadInput = () => {
-    const gamepadIndex = e.gamepad.index;
-    gamepad = navigator.getGamepads()[gamepadIndex];
-
-    // map gamepad keys to game
-    if (gamepad) {
-      // A [xbox] or X [playstation]
-      gamepadKeys.up = gamepad.buttons[0].pressed;
-      // B [xbox] or O [playstation]
-      gamepadKeys.down = gamepad.buttons[1].pressed;
-      // left axes or directional left
-      gamepadKeys.left = gamepad.buttons[14].pressed || gamepad.axes[0] === -1;
-      // right axes or directional right
-      gamepadKeys.right = gamepad.buttons[15].pressed || gamepad.axes[0] === 1;
-    }
-
-    requestAnimationFrame(getGamepadInput);
-  }
-
-  // run getGamePadInput every animation frame handled by browser
-  requestAnimationFrame(getGamepadInput);
+window.addEventListener('gamepadconnected', (e) => {
+  const { index } = e.gamepad;
+  navigatorGamepads[index] = navigator.getGamepads()[index];
 });
+
+window.addEventListener('gamepaddisconnected', (e) => {
+  const { index } = e.gamepad;
+  delete navigatorGamepads[index];
+});
+
+function updateGamepads () {
+  for (const gamepadIndex in navigatorGamepads) {
+    const gamepad = navigator.getGamepads()[gamepadIndex];
+    if (gamepad) {
+      const { buttons, axes } = gamepad;
+      const currentGamepad = gamepads[gamepadIndex] = {
+        up: buttons[0].value || buttons[12].value || (axes[1] < 0 ? -axes[1] : 0) || (axes[3] < 0 ? -axes[3] : 0) || buttons[7].value,
+        down: buttons[1].value || buttons[13].value || (axes[1] > 0 ? axes[1] : 0) || (axes[3] > 0 ? axes[3] : 0) || buttons[6].value,
+        left: buttons[14].value || (axes[0] < 0 ? -axes[0] : 0) || (axes[2] < 0 ? -axes[2] : 0),
+        right: buttons[15].value || (axes[0] > 0 ? axes[0] : 0) || (axes[2] > 0 ? axes[2] : 0)
+      };
+      currentGamepad.active = (() => {
+        const { up, down, left, right } = currentGamepad;
+        return up || down || left || right;
+      })();
+    } else {
+      delete gamepads[gamepadIndex];
+    }
+  }
+  setTimeout(updateGamepads, 0);
+}
+
+updateGamepads();
 
 function updateCar (car, i) {
   if (car.isThrottling) {
@@ -207,17 +215,19 @@ setInterval(() => {
 
   const canTurn = localCar.power > 0.0025 || localCar.reverse;
 
-  if (touching.active) {
-    const throttle = Math.round(touching.up * 10) / 10;
-    const reverse = Math.round(touching.down * 10) / 10;
+  const gamepad = Object.values(gamepads).find(gamepad => gamepad.active) || touching;
+
+  if (gamepad.active) {
+    const throttle = Math.round(gamepad.up * 10) / 10;
+    const reverse = Math.round(gamepad.down * 10) / 10;
 
     if (localCar.isThrottling !== throttle || localCar.isReversing !== reverse) {
       changed = true;
       localCar.isThrottling = throttle;
       localCar.isReversing = reverse;
     }
-    const turnLeft = canTurn && Math.round(touching.left * 10) / 10;
-    const turnRight = canTurn && Math.round(touching.right * 10) / 10;
+    const turnLeft = canTurn && Math.round(gamepad.left * 10) / 10;
+    const turnRight = canTurn && Math.round(gamepad.right * 10) / 10;
 
     if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
@@ -228,8 +238,8 @@ setInterval(() => {
       localCar.isTurningRight = turnRight;
     }
   } else {
-    const pressingUp = keyActive('up') || gamepadKeys.up;
-    const pressingDown = keyActive('down') || gamepadKeys.down;
+    const pressingUp = keyActive('up');
+    const pressingDown = keyActive('down');
 
     if (localCar.isThrottling !== pressingUp || localCar.isReversing !== pressingDown) {
       changed = true;
@@ -237,8 +247,8 @@ setInterval(() => {
       localCar.isReversing = pressingDown;
     }
 
-    const turnLeft = canTurn && keyActive('left') || canTurn && gamepadKeys.left;
-    const turnRight = canTurn && keyActive('right') || canTurn && gamepadKeys.right;
+    const turnLeft = canTurn && keyActive('left');
+    const turnRight = canTurn && keyActive('right');
 
     if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
