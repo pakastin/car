@@ -249,11 +249,11 @@ function updateCar (car, i) {
       bulletsScene.appendChild(el);
       bullets.push({
         el,
-        x: x + Math.sin(angle) * 10,
-        y: y - Math.cos(angle) * 10,
+        x: x + Math.sin(angle) * 12.5,
+        y: y - Math.cos(angle) * 12.5,
         angle,
-        xVelocity: xVelocity + Math.sin(angle) * 1,
-        yVelocity: yVelocity + Math.cos(angle) * 1,
+        xVelocity: xVelocity + Math.sin(angle) * 1.25,
+        yVelocity: yVelocity + Math.cos(angle) * 1.25,
         shootAt: Date.now()
       });
     }
