@@ -385,7 +385,9 @@ resize();
 
 window.addEventListener('resize', resize);
 
-const socket = io('https://car.pakastin.fi');
+const socket = io('https://car.pakastin.fi', {
+  withCredentials: true
+});
 
 socket.on('connect', () => {
   sendParams(localCar);
