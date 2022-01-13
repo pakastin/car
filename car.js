@@ -240,8 +240,16 @@ function updateCar (car, i) {
   car.angle += car.angularVelocity;
   car.angularVelocity *= angularDrag;
 
+  if (car.isHit) {
+    car.isHit = false;
+    car.x = Math.random() * window.innerWidth;
+    car.y = Math.random() * window.innerHeight;
+    car.xVelocity = 0;
+    car.yVelocity = 0;
+  }
+
   if (car.isShooting) {
-    if (!car.lastShootAt || car.lastShootAt < Date.now() - 60) {
+    if (!car.lastShootAt || car.lastShootAt < Date.now() - 45) {
       car.lastShootAt = Date.now();
       const { x, y, angle, xVelocity, yVelocity } = car;
       const el = document.createElement('div');
@@ -249,8 +257,8 @@ function updateCar (car, i) {
       bulletsScene.appendChild(el);
       bullets.push({
         el,
-        x: x + Math.sin(angle) * 12.5,
-        y: y - Math.cos(angle) * 12.5,
+        x: x + Math.sin(angle) * 10,
+        y: y - Math.cos(angle) * 10,
         angle,
         xVelocity: xVelocity + Math.sin(angle) * 1.25,
         yVelocity: yVelocity + Math.cos(angle) * 1.25,
@@ -268,7 +276,7 @@ function update () {
   for (let i = 0; i < bullets.length; i++) {
     const bullet = bullets[i];
 
-    if (bullet.shootAt < now - 600) {
+    if (bullet.shootAt < now - 450) {
       bulletsScene.removeChild(bullet.el);
       bullets.splice(i--, 1);
     } else {
@@ -358,6 +366,31 @@ setInterval(() => {
   } else if (localCar.y < 0) {
     localCar.y += windowHeight;
     changed = true;
+  }
+
+  for (let i = 0; i < cars.length - 1; i++) {
+    const carA = cars[i];
+
+    for (let j = i + 1; j < cars.length; j++) {
+      const carB = cars[j];
+
+      if (circlesHit({ x: carA.x, y: carA.y, r: 7.5 }, { x: carB.x, y: carB.y, r: 7.5 })) {
+        carA.isHit = true;
+        carB.isHit = true;
+      }
+    }
+  }
+
+  for (let i = 0; i < cars.length; i++) {
+    const car = cars[i];
+
+    for (let j = 0; j < bullets.length; j++) {
+      const bullet = bullets[i];
+
+      if (circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
+        car.isHit = true;
+      }
+    }
   }
 
   const ms = Date.now();
@@ -566,3 +599,7 @@ setInterval(() => {
   ctx.fillRect(0, 0, windowWidth, windowHeight);
   ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
 }, 30000);
+
+function circlesHit ({ x: x1, y: y1, r: r1 }, { x: x2, y: y2, r: r2 }) {
+  return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) < (r1 + r2);
+}
