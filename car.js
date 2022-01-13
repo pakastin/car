@@ -191,7 +191,7 @@ function updateGamepads () {
           (axes[0] > 0 ? axes[0] : 0),
           (axes[2] > 0 ? axes[2] : 0)
         ),
-        space: buttons[2].value
+        space: buttons[2].value || buttons[5].value
       };
       currentGamepad.active = (() => {
         const { up, down, left, right } = currentGamepad;
