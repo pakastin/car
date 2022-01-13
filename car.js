@@ -162,7 +162,7 @@ function updateGamepads () {
       delete gamepads[gamepadIndex];
     }
   }
-  setTimeout(updateGamepads, 0);
+  setTimeout(updateGamepads, 1000 / 60);
 }
 
 updateGamepads();
