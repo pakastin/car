@@ -387,7 +387,7 @@ setInterval(() => {
   for (let i = 0; i < bullets.length; i++) {
     const bullet = bullets[i];
 
-    if (circlesHit({ x: localCar.x, y: localCar.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
+    if (bullet && circlesHit({ x: localCar.x, y: localCar.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
       localCar.isHit = true;
       changed = true;
     }
