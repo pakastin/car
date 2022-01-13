@@ -278,7 +278,7 @@ setInterval(() => {
   if (gamepad.active) {
     const throttle = Math.round(gamepad.up * 10) / 10;
     const reverse = Math.round(gamepad.down * 10) / 10;
-    const isShooting = gamepad.isShooting;
+    const isShooting = gamepad.space;
 
     if (isShooting !== localCar.isShooting) {
       changed = true;
