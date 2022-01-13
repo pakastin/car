@@ -35,10 +35,6 @@ canvas {
   background-color: #ff3300;
 }
 
-.car.ghost {
-  opacity: .5;
-}
-
 .bullet {
   position: absolute;
   top: -1px;

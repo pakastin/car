@@ -479,10 +479,6 @@ socket.on('params', ({ id, params }) => {
     el.addEventListener('click', () => randomizeCarColour(el));
   }
 
-  if (params.ghost) {
-    car.el.classList.add('ghost');
-  }
-
   for (const key in params) {
     if (key !== 'el') {
       car[key] = params[key];
