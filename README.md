@@ -2,7 +2,7 @@
 
 https://car.js.org
 
-Use keyboard (up, down, left, right) or touch screen (swipe up, down, left, right)
+Use keyboard (up, down, left, right), touch screen (swipe up, down, left, right) or gamepad (multiple controls).
 
 All code [here](https://github.com/pakastin/car/blob/master/car.js)! Not real car physics, but a simple way to do nice little drifting 😛
 
