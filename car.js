@@ -262,6 +262,7 @@ function updateCar (car, i) {
 
 function update () {
   const now = Date.now();
+
   cars.forEach(updateCar);
 
   for (let i = 0; i < bullets.length; i++) {
@@ -375,7 +376,7 @@ setInterval(() => {
   if (changed) {
     sendParams(localCar);
   }
-}, 1000 / 60);
+}, 1000 / 120);
 
 function randomizeCarColour (el) {
   const colour = `hsl(${Math.floor(Math.random() * 16 * 16)}, 75%, 50%)`;
