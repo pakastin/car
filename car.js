@@ -194,8 +194,8 @@ function updateGamepads () {
         space: buttons[2].value || buttons[5].value
       };
       currentGamepad.active = (() => {
-        const { up, down, left, right } = currentGamepad;
-        return up || down || left || right;
+        const { up, down, left, right, space } = currentGamepad;
+        return up || down || left || right || space;
       })();
     } else {
       delete gamepads[gamepadIndex];
