@@ -278,6 +278,12 @@ setInterval(() => {
   if (gamepad.active) {
     const throttle = Math.round(gamepad.up * 10) / 10;
     const reverse = Math.round(gamepad.down * 10) / 10;
+    const isShooting = gamepad.isShooting;
+
+    if (isShooting !== localCar.isShooting) {
+      changed = true;
+      localCar.isShooting = isShooting;
+    }
 
     if (localCar.isThrottling !== throttle || localCar.isReversing !== reverse) {
       changed = true;
@@ -286,8 +292,6 @@ setInterval(() => {
     }
     const turnLeft = canTurn && Math.round(gamepad.left * 10) / 10;
     const turnRight = canTurn && Math.round(gamepad.right * 10) / 10;
-
-    localCar.isShooting = gamepad.space;
 
     if (localCar.isTurningLeft !== turnLeft) {
       changed = true;
@@ -308,7 +312,10 @@ setInterval(() => {
       localCar.isReversing = pressingDown;
     }
 
-    localCar.isShooting = pressingSpace;
+    if (pressingSpace !== localCar.isShooting) {
+      changed = true;
+      localCar.isShooting = pressingSpace;
+    }
 
     const turnLeft = canTurn && keyActive('left');
     const turnRight = canTurn && keyActive('right');
