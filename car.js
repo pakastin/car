@@ -81,8 +81,12 @@ const touching = {
   space: 0
 };
 
+let touches = 0;
+
 window.addEventListener('touchstart', e => {
   e.preventDefault();
+
+  touches++;
 
   if (touching.active) {
     return;
@@ -124,6 +128,12 @@ window.addEventListener('touchstart', e => {
   };
 
   const touchend = e => {
+    touches--;
+
+    if (touches) {
+      return;
+    }
+
     touching.active = false;
     touching.up = 0;
     touching.down = 0;
