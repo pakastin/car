@@ -371,7 +371,7 @@ setInterval(() => {
     changed = true;
   }
 
-  for (let i = 0; i < cars.length - 1; i++) {
+  for (let i = 0; i < cars.length; i++) {
     const car = cars[i];
 
     if (localCar === car) {
