@@ -252,7 +252,7 @@ function updateCar (car, i) {
   car.angularVelocity *= angularDrag;
 
   if (car.isShooting) {
-    if (!car.lastShootAt || car.lastShootAt < Date.now() - 45) {
+    if (!car.lastShootAt || car.lastShootAt < Date.now() - 60) {
       car.lastShootAt = Date.now();
       const { x, y, angle, xVelocity, yVelocity } = car;
       const el = document.createElement('div');
@@ -279,7 +279,7 @@ function update () {
   for (let i = 0; i < bullets.length; i++) {
     const bullet = bullets[i];
 
-    if (bullet.shootAt < now - 450) {
+    if (bullet.shootAt < now - 600) {
       bulletsScene.removeChild(bullet.el);
       bullets.splice(i--, 1);
     } else {
