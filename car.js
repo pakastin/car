@@ -207,6 +207,17 @@ function updateGamepads () {
 updateGamepads();
 
 function updateCar (car, i) {
+  if (car.isHit) {
+    car.isHit = false;
+    if (car === localCar) {
+      car.x = Math.random() * window.innerWidth;
+      car.y = Math.random() * window.innerHeight;
+      car.xVelocity = 0;
+      car.yVelocity = 0;
+      sendParams(localCar);
+    }
+  }
+
   if (car.isThrottling) {
     car.power += powerFactor * car.isThrottling;
   } else {
@@ -239,14 +250,6 @@ function updateCar (car, i) {
   car.yVelocity *= drag;
   car.angle += car.angularVelocity;
   car.angularVelocity *= angularDrag;
-
-  if (car.isHit) {
-    car.isHit = false;
-    car.x = Math.random() * window.innerWidth;
-    car.y = Math.random() * window.innerHeight;
-    car.xVelocity = 0;
-    car.yVelocity = 0;
-  }
 
   if (car.isShooting) {
     if (!car.lastShootAt || car.lastShootAt < Date.now() - 45) {
@@ -369,27 +372,24 @@ setInterval(() => {
   }
 
   for (let i = 0; i < cars.length - 1; i++) {
-    const carA = cars[i];
+    const car = cars[i];
 
-    for (let j = i + 1; j < cars.length; j++) {
-      const carB = cars[j];
+    if (localCar === car) {
+      continue;
+    }
 
-      if (circlesHit({ x: carA.x, y: carA.y, r: 7.5 }, { x: carB.x, y: carB.y, r: 7.5 })) {
-        carA.isHit = true;
-        carB.isHit = true;
-      }
+    if (circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: localCar.x, y: localCar.y, r: 7.5 })) {
+      localCar.isHit = true;
+      changed = true;
     }
   }
 
-  for (let i = 0; i < cars.length; i++) {
-    const car = cars[i];
+  for (let i = 0; i < bullets.length; i++) {
+    const bullet = bullets[i];
 
-    for (let j = 0; j < bullets.length; j++) {
-      const bullet = bullets[i];
-
-      if (circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
-        car.isHit = true;
-      }
+    if (circlesHit({ x: localCar.x, y: localCar.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
+      localCar.isHit = true;
+      changed = true;
     }
   }
 
