@@ -149,10 +149,30 @@ function updateGamepads () {
     if (gamepad) {
       const { buttons, axes } = gamepad;
       const currentGamepad = gamepads[gamepadIndex] = {
-        up: buttons[0].value || buttons[12].value || buttons[7].value || (axes[1] < 0 ? -axes[1] : 0) || (axes[3] < 0 ? -axes[3] : 0),
-        down: buttons[1].value || buttons[13].value || buttons[6].value || (axes[1] > 0 ? axes[1] : 0) || (axes[3] > 0 ? axes[3] : 0),
-        left: buttons[14].value || (axes[0] < 0 ? -axes[0] : 0) || (axes[2] < 0 ? -axes[2] : 0),
-        right: buttons[15].value || (axes[0] > 0 ? axes[0] : 0) || (axes[2] > 0 ? axes[2] : 0)
+        up: Math.max(
+          buttons[0].value,
+          buttons[12].value,
+          buttons[7].value,
+          (axes[1] < 0 ? -axes[1] : 0),
+          (axes[3] < 0 ? -axes[3] : 0)
+        ),
+        down: Math.max(
+          buttons[1].value,
+          buttons[13].value,
+          buttons[6].value,
+          (axes[1] > 0 ? axes[1] : 0),
+          (axes[3] > 0 ? axes[3] : 0)
+        ),
+        left: Math.max(
+          buttons[14].value,
+          (axes[0] < 0 ? -axes[0] : 0),
+          (axes[2] < 0 ? -axes[2] : 0)
+        ),
+        right: Math.max(
+          buttons[15].value,
+          (axes[0] > 0 ? axes[0] : 0),
+          (axes[2] > 0 ? axes[2] : 0)
+        )
       };
       currentGamepad.active = (() => {
         const { up, down, left, right } = currentGamepad;
