@@ -150,7 +150,7 @@ function updateGamepads () {
       const { buttons, axes } = gamepad;
       const currentGamepad = gamepads[gamepadIndex] = {
         up: buttons[0].value || buttons[12].value || buttons[7].value || (axes[1] < 0 ? -axes[1] : 0) || (axes[3] < 0 ? -axes[3] : 0),
-        down: buttons[1].value || buttons[13].value buttons[6].value || (axes[1] > 0 ? axes[1] : 0) || (axes[3] > 0 ? axes[3] : 0),
+        down: buttons[1].value || buttons[13].value || buttons[6].value || (axes[1] > 0 ? axes[1] : 0) || (axes[3] > 0 ? axes[3] : 0),
         left: buttons[14].value || (axes[0] < 0 ? -axes[0] : 0) || (axes[2] < 0 ? -axes[2] : 0),
         right: buttons[15].value || (axes[0] > 0 ? axes[0] : 0) || (axes[2] > 0 ? axes[2] : 0)
       };
