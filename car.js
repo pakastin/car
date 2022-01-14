@@ -11,26 +11,6 @@ const drag = 0.95;
 const angularDrag = 0.95;
 const turnSpeed = 0.002;
 
-// Key codes
-
-const arrowKeys = {
-  up: 38,
-  down: 40,
-  left: 37,
-  right: 39,
-  space: 32
-};
-const wasdKeys = {
-  up: 87,
-  down: 83,
-  left: 65,
-  right: 68
-};
-
-const keyActive = (key) => {
-  return keysDown[arrowKeys[key]] || keysDown[wasdKeys[key]] || false;
-};
-
 let windowWidth = window.innerWidth;
 let windowHeight = window.innerHeight;
 
@@ -60,151 +40,8 @@ const carsById = {};
 
 const bullets = [];
 
-const keysDown = {};
-
 let needResize;
 let resizing;
-
-window.addEventListener('keydown', e => {
-  keysDown[e.which] = true;
-});
-
-window.addEventListener('keyup', e => {
-  keysDown[e.which] = false;
-});
-
-const touching = {
-  up: 0,
-  down: 0,
-  left: 0,
-  right: 0,
-  space: 0
-};
-
-let touches = 0;
-
-window.addEventListener('touchstart', e => {
-  e.preventDefault();
-
-  touches++;
-
-  if (touching.active) {
-    return;
-  }
-  touching.active = true;
-
-  const prevPos = {
-    x: e.touches[0].pageX,
-    y: e.touches[0].pageY
-  };
-
-  const touchmove = e => {
-    e.preventDefault();
-
-    const pos = {
-      x: e.touches[0].pageX,
-      y: e.touches[0].pageY
-    };
-
-    const diff = {
-      x: pos.x - prevPos.x,
-      y: pos.y - prevPos.y
-    };
-
-    prevPos.x = pos.x;
-    prevPos.y = pos.y;
-
-    touching.up -= diff.y / (windowHeight / 3);
-    touching.down += diff.y / (windowHeight / 3);
-    touching.left -= diff.x / (windowWidth / 3);
-    touching.right += diff.x / (windowWidth / 3);
-
-    touching.space = e.touches[1] != null;
-
-    touching.up = Math.max(0, Math.min(1, touching.up));
-    touching.down = Math.max(0, Math.min(1, touching.down));
-    touching.left = Math.max(0, Math.min(1, touching.left));
-    touching.right = Math.max(0, Math.min(1, touching.right));
-  };
-
-  const touchend = e => {
-    touches--;
-
-    if (touches) {
-      return;
-    }
-
-    touching.active = false;
-    touching.up = 0;
-    touching.down = 0;
-    touching.left = 0;
-    touching.right = 0;
-
-    window.removeEventListener('touchmove', touchmove);
-    window.removeEventListener('touchend', touchend);
-  };
-
-  window.addEventListener('touchmove', touchmove);
-  window.addEventListener('touchend', touchend);
-});
-
-const navigatorGamepads = {};
-const gamepads = {};
-
-window.addEventListener('gamepadconnected', (e) => {
-  const { index } = e.gamepad;
-  navigatorGamepads[index] = navigator.getGamepads()[index];
-});
-
-window.addEventListener('gamepaddisconnected', (e) => {
-  const { index } = e.gamepad;
-  delete navigatorGamepads[index];
-});
-
-function updateGamepads () {
-  for (const gamepadIndex in navigatorGamepads) {
-    const gamepad = navigator.getGamepads()[gamepadIndex];
-    if (gamepad) {
-      const { buttons, axes } = gamepad;
-      const currentGamepad = gamepads[gamepadIndex] = {
-        up: Math.max(
-          buttons[0].value,
-          buttons[12].value,
-          buttons[7].value,
-          (axes[1] < 0 ? -axes[1] : 0),
-          (axes[3] < 0 ? -axes[3] : 0)
-        ),
-        down: Math.max(
-          buttons[1].value,
-          buttons[13].value,
-          buttons[6].value,
-          (axes[1] > 0 ? axes[1] : 0),
-          (axes[3] > 0 ? axes[3] : 0)
-        ),
-        left: Math.max(
-          buttons[14].value,
-          (axes[0] < 0 ? -axes[0] : 0),
-          (axes[2] < 0 ? -axes[2] : 0)
-        ),
-        right: Math.max(
-          buttons[15].value,
-          (axes[0] > 0 ? axes[0] : 0),
-          (axes[2] > 0 ? axes[2] : 0)
-        ),
-        space: buttons[2].value || buttons[5].value
-      };
-      currentGamepad.active = (() => {
-        const { up, down, left, right, space } = currentGamepad;
-        return up || down || left || right || space;
-      })();
-    } else {
-      delete gamepads[gamepadIndex];
-    }
-  }
-  setTimeout(updateGamepads, 1000 / 60);
-}
-
-updateGamepads();
 
 function updateCar (car, i) {
   if (car.isHit) {
@@ -298,61 +135,32 @@ setInterval(() => {
 
   const canTurn = localCar.power > 0.0025 || localCar.reverse;
 
-  const gamepad = Object.values(gamepads).find(gamepad => gamepad.active) || touching;
+  const controls = window.getControls();
 
-  if (gamepad.active) {
-    const throttle = Math.round(gamepad.up * 10) / 10;
-    const reverse = Math.round(gamepad.down * 10) / 10;
-    const isShooting = gamepad.space;
+  const throttle = Math.round(controls.up * 10) / 10;
+  const reverse = Math.round(controls.down * 10) / 10;
+  const isShooting = controls.shoot;
 
-    if (isShooting !== localCar.isShooting) {
-      changed = true;
-      localCar.isShooting = isShooting;
-    }
+  if (isShooting !== localCar.isShooting) {
+    changed = true;
+    localCar.isShooting = isShooting;
+  }
 
-    if (localCar.isThrottling !== throttle || localCar.isReversing !== reverse) {
-      changed = true;
-      localCar.isThrottling = throttle;
-      localCar.isReversing = reverse;
-    }
-    const turnLeft = canTurn && Math.round(gamepad.left * 10) / 10;
-    const turnRight = canTurn && Math.round(gamepad.right * 10) / 10;
+  if (localCar.isThrottling !== throttle || localCar.isReversing !== reverse) {
+    changed = true;
+    localCar.isThrottling = throttle;
+    localCar.isReversing = reverse;
+  }
+  const turnLeft = canTurn && Math.round(controls.left * 10) / 10;
+  const turnRight = canTurn && Math.round(controls.right * 10) / 10;
 
-    if (localCar.isTurningLeft !== turnLeft) {
-      changed = true;
-      localCar.isTurningLeft = turnLeft;
-    }
-    if (localCar.isTurningRight !== turnRight) {
-      changed = true;
-      localCar.isTurningRight = turnRight;
-    }
-  } else {
-    const pressingUp = keyActive('up');
-    const pressingDown = keyActive('down');
-    const pressingSpace = keyActive('space');
-
-    if (localCar.isThrottling !== pressingUp || localCar.isReversing !== pressingDown) {
-      changed = true;
-      localCar.isThrottling = pressingUp;
-      localCar.isReversing = pressingDown;
-    }
-
-    if (pressingSpace !== localCar.isShooting) {
-      changed = true;
-      localCar.isShooting = pressingSpace;
-    }
-
-    const turnLeft = canTurn && keyActive('left');
-    const turnRight = canTurn && keyActive('right');
-
-    if (localCar.isTurningLeft !== turnLeft) {
-      changed = true;
-      localCar.isTurningLeft = turnLeft;
-    }
-    if (localCar.isTurningRight !== turnRight) {
-      changed = true;
-      localCar.isTurningRight = turnRight;
-    }
+  if (localCar.isTurningLeft !== turnLeft) {
+    changed = true;
+    localCar.isTurningLeft = turnLeft;
+  }
+  if (localCar.isTurningRight !== turnRight) {
+    changed = true;
+    localCar.isTurningRight = turnRight;
   }
 
   if (localCar.x > windowWidth) {
