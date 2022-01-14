@@ -97,10 +97,12 @@ canvas {
   border-radius: .25rem;
 }
 .name form input {
+  display: inline-block;
   font: inherit;
   padding: .5rem;
 }
 .name form button {
+  display: inline-block;
   font: inherit;
   padding: .5rem;
   margin-left: .5rem;
