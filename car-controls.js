@@ -56,8 +56,8 @@
   window.addEventListener('touchstart', e => {
     e.preventDefault();
 
-    const windowWidth = window.width;
-    const windowHeight = window.height;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
 
     touches++;
 
