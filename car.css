@@ -108,7 +108,10 @@ canvas {
 .points {
   position: absolute;
   top: 0;
-  right: 6rem;
+  right: 5rem;
   text-align: right;
   white-space: pre;
+  font-size: .625rem;
+  color: #999;
+  padding: .5rem;
 }
