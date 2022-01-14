@@ -23,6 +23,10 @@ canvas {
 
 .car {
   position: absolute;
+}
+
+.car-body {
+  position: absolute;
   top: -8px;
   left: -4px;
   width: 8px;
@@ -31,12 +35,21 @@ canvas {
   background-color: #888;
 }
 
-.car.shot {
+.car-body.shot {
   opacity: .5;
 }
 
-.car.red {
+.car-body.red {
   background-color: #ff3300;
+}
+
+.car-name {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  font-size: .625rem;
+  color: #999;
+  transform: translate(-50%, -50%);
 }
 
 .bullet {
@@ -61,4 +74,33 @@ canvas {
   left: 0;
   padding: .5rem;
   font-size: .75rem;
+}
+.name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.name-bg {
+  height: 100%;
+  background-color: rgba(0, 0, 0, .75);
+}
+.name form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: .25rem;
+}
+.name form input {
+  font: inherit;
+  padding: .5rem;
+}
+.name form button {
+  font: inherit;
+  padding: .5rem;
+  margin-left: .5rem;
 }

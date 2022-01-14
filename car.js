@@ -15,14 +15,14 @@
   let windowWidth = window.innerWidth;
   let windowHeight = window.innerHeight;
 
-  const canvas = document.getElementsByTagName('canvas')[0];
-  const ctx = canvas.getContext('2d');
+  const $canvas = document.querySelector('canvas');
+  const ctx = $canvas.getContext('2d');
 
-  const scene = document.getElementsByClassName('scene')[0];
-  const bulletsScene = document.getElementsByClassName('bullets')[0];
+  const $scene = document.querySelector('.scene');
+  const $bulletsScene = document.querySelector('.bullets');
 
   const localCar = {
-    el: document.getElementsByClassName('car')[0],
+    $el: document.querySelector('.car'),
     x: windowWidth / 2,
     y: windowHeight / 2,
     xVelocity: 0,
@@ -231,12 +231,24 @@
   function renderCar (car) {
     const { x, y, angle, power, reverse, angularVelocity } = car;
 
-    car.el.style.transform = `translate(${x}px, ${y}px) rotate(${angle * 180 / Math.PI}deg)`;
+    if (!car.$body) {
+      car.$body = car.$el.querySelector('.car-body');
+    }
+
+    if (!car.$name) {
+      car.$name = car.$el.querySelector('.car-name');
+    }
+
+    console.log(car);
+
+    car.$el.style.transform = `translate(${x}px, ${y}px)`;
+    car.$body.style.transform = `rotate(${angle * 180 / Math.PI}deg)`;
+    car.$name.textContent = car.name || '';
 
     if (car.isShot) {
-      car.el.classList.add('shot');
+      car.$body.classList.add('shot');
     } else {
-      car.el.classList.remove('shot');
+      car.$body.classList.remove('shot');
     }
 
     if ((power > 0.0025) || reverse) {
@@ -268,13 +280,13 @@
         resizing = true;
 
         const prevImage = new Image();
-        prevImage.src = canvas.toDataURL();
+        prevImage.src = $canvas.toDataURL();
 
         prevImage.onload = () => {
           resizing = false;
 
-          canvas.width = windowWidth;
-          canvas.height = windowHeight;
+          $canvas.width = windowWidth;
+          $canvas.height = windowHeight;
 
           ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
 
@@ -291,16 +303,16 @@
       const bullet = bullets[i];
       const { x, y, shootAt } = bullet;
 
-      if (!bullet.el) {
-        const el = bullet.el = document.createElement('div');
-        el.classList.add('bullet');
-        bulletsScene.appendChild(el);
+      if (!bullet.$el) {
+        const $el = bullet.$el = document.createElement('div');
+        $el.classList.add('bullet');
+        $bulletsScene.appendChild($el);
       }
-      bullet.el.style.transform = `translate(${x}px, ${y}px)`;
+      bullet.$el.style.transform = `translate(${x}px, ${y}px)`;
 
       if (shootAt < now - 600) {
-        if (bullet.el) {
-          bulletsScene.removeChild(bullet.el);
+        if (bullet.$el) {
+          $bulletsScene.removeChild(bullet.$el);
           bullets.splice(i--, 1);
         }
       }
@@ -336,11 +348,17 @@
     let car = carsById[id];
 
     if (!car) {
-      const el = document.createElement('div');
-      el.classList.add('car');
-      scene.insertBefore(el, localCar.el);
+      const $el = document.createElement('div');
+      $el.classList.add('car');
+      const $body = document.createElement('div');
+      $body.classList.add('car-body');
+      const $name = document.createElement('div');
+      $name.classList.add('car-name');
+      $el.appendChild($body);
+      $el.appendChild($name);
+      $scene.insertBefore($el, localCar.$el);
       car = {
-        el
+        $el
       };
       carsById[id] = car;
       cars.push(car);
@@ -367,8 +385,8 @@
       }
     }
 
-    if (car.el.parentNode) {
-      car.el.parentNode.removeChild(car.el);
+    if (car.$el.parentNode) {
+      car.$el.parentNode.removeChild(car.$el);
     }
     delete carsById[id];
   });
@@ -389,7 +407,8 @@
       isTurningLeft,
       isTurningRight,
       isHit,
-      isShot
+      isShot,
+      name
     } = car;
 
     socket.emit('params', {
@@ -407,27 +426,30 @@
       isTurningLeft,
       isTurningRight,
       isHit,
-      isShot
+      isShot,
+      name
     });
   }
 
-  const disconnect = document.getElementsByTagName('button')[0];
+  const $disconnect = document.querySelector('.disconnect');
 
-  disconnect.onclick = () => {
+  $disconnect.onclick = () => {
     socket.disconnect();
+
+    localCar.name = '';
 
     while (cars.length > 1) {
       const car = cars.pop();
 
-      car.el.parentNode.removeChild(car.el);
+      car.$el.parentNode.removeChild(car.$el);
     }
 
-    disconnect.parentNode.removeChild(disconnect);
+    $disconnect.parentNode.removeChild($disconnect);
   };
 
-  const clearScreen = document.getElementsByTagName('button')[1];
+  const $clearScreen = document.querySelector('.clearscreen');
 
-  clearScreen.onclick = () => {
+  $clearScreen.onclick = () => {
     ctx.clearRect(0, 0, windowWidth, windowHeight);
   };
 
@@ -440,4 +462,14 @@
   function circlesHit ({ x: x1, y: y1, r: r1 }, { x: x2, y: y2, r: r2 }) {
     return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) < (r1 + r2);
   }
+
+  const $name = document.querySelector('.name');
+
+  $name.querySelector('form').onsubmit = (e) => {
+    e.preventDefault();
+
+    localCar.name = $name.querySelector('input').value || '';
+
+    $name.parentNode.removeChild($name);
+  };
 })();
