@@ -1,5 +1,5 @@
 (() => {
-  /* global Image, requestAnimationFrame, io */
+  /* global requestAnimationFrame, io */
 
   // Physics
 
@@ -12,21 +12,27 @@
   const angularDrag = 0.95;
   const turnSpeed = 0.002;
 
-  let windowWidth = window.innerWidth;
-  let windowHeight = window.innerHeight;
+  const WIDTH = 1500;
+  const HEIGHT = 1500;
 
   const $canvas = document.querySelector('canvas');
+
+  $canvas.width = WIDTH;
+  $canvas.height = HEIGHT;
+  
   const ctx = $canvas.getContext('2d');
 
+  ctx.fillStyle = 'rgba(63, 63, 63, 0.5)';
+
   const $scene = document.querySelector('.scene');
-  const $bulletsScene = document.querySelector('.bullets');
+  const $bullets = document.querySelector('.bullets');
 
   const $points = document.querySelector('.points');
 
   const localCar = {
     $el: document.querySelector('.car'),
-    x: windowWidth / 2,
-    y: windowHeight / 2,
+    x: WIDTH / 2,
+    y: HEIGHT / 2,
     xVelocity: 0,
     yVelocity: 0,
     power: 0,
@@ -43,9 +49,6 @@
   const carsById = {};
 
   const bullets = [];
-
-  let needResize;
-  let resizing;
 
   function updateCar (car, i) {
     if (car.isHit || car.isShot) {
@@ -157,19 +160,19 @@
       localCar.isTurningRight = turnRight;
     }
 
-    if (localCar.x > windowWidth) {
-      localCar.x -= windowWidth;
+    if (localCar.x > WIDTH) {
+      localCar.x -= WIDTH;
       changed = true;
     } else if (localCar.x < 0) {
-      localCar.x += windowWidth;
+      localCar.x += WIDTH;
       changed = true;
     }
 
-    if (localCar.y > windowHeight) {
-      localCar.y -= windowHeight;
+    if (localCar.y > HEIGHT) {
+      localCar.y -= HEIGHT;
       changed = true;
     } else if (localCar.y < 0) {
-      localCar.y += windowHeight;
+      localCar.y += HEIGHT;
       changed = true;
     }
 
@@ -279,28 +282,6 @@
         return [car.name || 'anonymous', car.points || 0].join(': ');
       }).join('\n');
 
-    if (needResize || resizing) {
-      needResize = false;
-
-      if (!resizing) {
-        resizing = true;
-
-        const prevImage = new Image();
-        prevImage.src = $canvas.toDataURL();
-
-        prevImage.onload = () => {
-          resizing = false;
-
-          $canvas.width = windowWidth;
-          $canvas.height = windowHeight;
-
-          ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
-
-          ctx.drawImage(prevImage, 0, 0);
-        };
-      }
-    }
-
     cars.forEach(renderCar);
 
     const now = Date.now();
@@ -312,31 +293,22 @@
       if (!bullet.$el) {
         const $el = bullet.$el = document.createElement('div');
         $el.classList.add('bullet');
-        $bulletsScene.appendChild($el);
+        $bullets.appendChild($el);
       }
       bullet.$el.style.transform = `translate(${x}px, ${y}px)`;
 
       if (shootAt < now - 600) {
         if (bullet.$el) {
-          $bulletsScene.removeChild(bullet.$el);
+          $bullets.removeChild(bullet.$el);
           bullets.splice(i--, 1);
         }
       }
     }
+
+    $scene.style.transform = `translate(${window.innerWidth / 2 - localCar.x}px, ${window.innerHeight / 2 - localCar.y}px)`;
   }
 
   requestAnimationFrame(render);
-
-  function resize () {
-    windowWidth = window.innerWidth;
-    windowHeight = window.innerHeight;
-
-    needResize = true;
-  }
-
-  resize();
-
-  window.addEventListener('resize', resize);
 
   const socket = io('https://car.pakastin.fi', {
     withCredentials: true
@@ -458,14 +430,14 @@
   const $clearScreen = document.querySelector('.clearscreen');
 
   $clearScreen.onclick = () => {
-    ctx.clearRect(0, 0, windowWidth, windowHeight);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
   };
 
   setInterval(() => {
-    ctx.fillStyle = 'rgba(255, 255, 255, .05)';
-    ctx.fillRect(0, 0, windowWidth, windowHeight);
-    ctx.fillStyle = 'rgba(63, 63, 63, 0.25)';
-  }, 30000);
+    ctx.fillStyle = 'rgba(255, 255, 255, .01)';
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.fillStyle = 'rgba(63, 63, 63, 0.5)';
+  }, 1000);
 
   function circlesHit ({ x: x1, y: y1, r: r1 }, { x: x2, y: y2, r: r2 }) {
     return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) < (r1 + r2);
