@@ -278,7 +278,7 @@
     requestAnimationFrame(render);
 
     $points.textContent = cars.slice()
-      .sort((a, b) => b.points - a.points)
+      .sort((a, b) => (b.points || 0) - (a.points || 0))
       .map(car => {
         return [car.name || 'anonymous', car.points || 0].join(': ');
       }).join('\n');
