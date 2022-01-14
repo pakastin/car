@@ -203,6 +203,8 @@
           car.y = Math.random() * window.innerHeight;
           car.xVelocity = 0;
           car.yVelocity = 0;
+          car.isHit = false;
+          car.isShot = false;
           changed = true;
         }
       }
