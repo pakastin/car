@@ -245,8 +245,6 @@
       car.$name = car.$el.querySelector('.car-name');
     }
 
-    console.log(car);
-
     car.$el.style.transform = `translate(${x}px, ${y}px)`;
     car.$body.style.transform = `rotate(${angle * 180 / Math.PI}deg)`;
     car.$name.textContent = car.name || '';
