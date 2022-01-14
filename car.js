@@ -387,7 +387,9 @@
       isReversing,
       isShooting,
       isTurningLeft,
-      isTurningRight
+      isTurningRight,
+      isHit,
+      isShot
     } = car;
 
     socket.emit('params', {
@@ -403,7 +405,9 @@
       isReversing,
       isShooting,
       isTurningLeft,
-      isTurningRight
+      isTurningRight,
+      isHit,
+      isShot
     });
   }
 
