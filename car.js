@@ -19,7 +19,7 @@
 
   $canvas.width = WIDTH;
   $canvas.height = HEIGHT;
-  
+
   const ctx = $canvas.getContext('2d');
 
   ctx.fillStyle = 'rgba(63, 63, 63, 0.5)';
@@ -160,19 +160,19 @@
       localCar.isTurningRight = turnRight;
     }
 
-    if (localCar.x > WIDTH) {
-      localCar.x -= WIDTH;
+    if (localCar.x > WIDTH + 7.5) {
+      localCar.x -= WIDTH + 15;
       changed = true;
-    } else if (localCar.x < 0) {
-      localCar.x += WIDTH;
+    } else if (localCar.x < -7.5) {
+      localCar.x += WIDTH + 15;
       changed = true;
     }
 
-    if (localCar.y > HEIGHT) {
-      localCar.y -= HEIGHT;
+    if (localCar.y > HEIGHT + 7.5) {
+      localCar.y -= HEIGHT + 15;
       changed = true;
-    } else if (localCar.y < 0) {
-      localCar.y += HEIGHT;
+    } else if (localCar.y < -7.5) {
+      localCar.y += HEIGHT + 15;
       changed = true;
     }
 
