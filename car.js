@@ -45,9 +45,8 @@
   let resizing;
 
   function updateCar (car, i) {
-    if (car.isHit || car.isShot) {
+    if (car.isShot) {
       if (car === localCar) {
-        car.isHit = false;
         car.isShot = false;
         car.x = Math.random() * window.innerWidth;
         car.y = Math.random() * window.innerHeight;
@@ -183,6 +182,10 @@
 
       if (circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: localCar.x, y: localCar.y, r: 7.5 })) {
         localCar.isHit = true;
+        localCar.x = Math.random() * window.innerWidth;
+        localCar.y = Math.random() * window.innerHeight;
+        localCar.xVelocity = 0;
+        localCar.yVelocity = 0;
         changed = true;
       }
     }
@@ -203,7 +206,6 @@
           car.y = Math.random() * window.innerHeight;
           car.xVelocity = 0;
           car.yVelocity = 0;
-          car.isHit = false;
           car.isShot = false;
           changed = true;
         }
