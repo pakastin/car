@@ -45,9 +45,10 @@
   let resizing;
 
   function updateCar (car, i) {
-    if (car.isHit) {
-      car.isHit = false;
+    if (car.isHit || car.isShot) {
       if (car === localCar) {
+        car.isHit = false;
+        car.isShot = false;
         car.x = Math.random() * window.innerWidth;
         car.y = Math.random() * window.innerHeight;
         car.xVelocity = 0;
@@ -176,21 +177,34 @@
         continue;
       }
 
+      if (car.isShot) {
+        continue;
+      }
+
       if (circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: localCar.x, y: localCar.y, r: 7.5 })) {
         localCar.isHit = true;
         changed = true;
       }
     }
 
-    for (let i = 0; i < bullets.length; i++) {
-      const bullet = bullets[i];
+    for (let j = 0; j < cars.length; j++) {
+      const car = cars[j];
 
-      if (bullet && circlesHit({ x: localCar.x, y: localCar.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
-        localCar.x = Math.random() * window.innerWidth;
-        localCar.y = Math.random() * window.innerHeight;
-        localCar.xVelocity = 0;
-        localCar.yVelocity = 0;
-        changed = true;
+      for (let i = 0; i < bullets.length; i++) {
+        const bullet = bullets[i];
+
+        if (bullet && circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
+          if (car !== localCar) {
+            car.isShot = true;
+            changed = true;
+            continue;
+          }
+          car.x = Math.random() * window.innerWidth;
+          car.y = Math.random() * window.innerHeight;
+          car.xVelocity = 0;
+          car.yVelocity = 0;
+          changed = true;
+        }
       }
     }
 
@@ -216,6 +230,12 @@
     const { x, y, angle, power, reverse, angularVelocity } = car;
 
     car.el.style.transform = `translate(${x}px, ${y}px) rotate(${angle * 180 / Math.PI}deg)`;
+
+    if (car.isShot) {
+      car.el.classList.add('shot');
+    } else {
+      car.el.classList.remove('shot');
+    }
 
     if ((power > 0.0025) || reverse) {
       if (((maxReverse === reverse) || (maxPower === power)) && Math.abs(angularVelocity) < 0.002) {

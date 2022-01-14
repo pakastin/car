@@ -31,6 +31,10 @@ canvas {
   background-color: #888;
 }
 
+.car.shot {
+  opacity: .5;
+}
+
 .car.red {
   background-color: #ff3300;
 }
