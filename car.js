@@ -21,6 +21,8 @@
   const $scene = document.querySelector('.scene');
   const $bulletsScene = document.querySelector('.bullets');
 
+  const $points = document.querySelector('.points');
+
   const localCar = {
     $el: document.querySelector('.car'),
     x: windowWidth / 2,
@@ -33,7 +35,8 @@
     angularVelocity: 0,
     isThrottling: false,
     isReversing: false,
-    isShooting: false
+    isShooting: false,
+    points: 0
   };
 
   const cars = [localCar];
@@ -195,8 +198,11 @@
 
         if (bullet && circlesHit({ x: car.x, y: car.y, r: 7.5 }, { x: bullet.x, y: bullet.y, r: 2 })) {
           if (car !== localCar) {
-            car.isShot = true;
-            changed = true;
+            if (!car.isShot) {
+              car.isShot = true;
+              localCar.points++;
+              changed = true;
+            }
             continue;
           }
           car.x = Math.random() * window.innerWidth;
@@ -272,6 +278,12 @@
 
   function render (ms) {
     requestAnimationFrame(render);
+
+    $points.textContent = cars.slice()
+      .sort((a, b) => b.points - a.points)
+      .map(car => {
+        return [car.name || 'anonymous', car.points || 0].join(': ');
+      }).join('\n');
 
     if (needResize || resizing) {
       needResize = false;
@@ -408,7 +420,8 @@
       isTurningRight,
       isHit,
       isShot,
-      name
+      name,
+      points
     } = car;
 
     socket.emit('params', {
@@ -427,7 +440,8 @@
       isTurningRight,
       isHit,
       isShot,
-      name
+      name,
+      points
     });
   }
 

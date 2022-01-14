@@ -48,8 +48,9 @@ canvas {
   top: 20px;
   left: 0;
   font-size: .625rem;
-  color: #999;
+  color: rgba(0, 0, 0, .5);
   transform: translate(-50%, -50%);
+  white-space: nowrap;
 }
 
 .bullet {
@@ -103,4 +104,11 @@ canvas {
   font: inherit;
   padding: .5rem;
   margin-left: .5rem;
+}
+.points {
+  position: absolute;
+  top: 0;
+  right: 6rem;
+  text-align: right;
+  white-space: pre;
 }
