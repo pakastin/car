@@ -205,12 +205,7 @@
             }
             continue;
           }
-          car.x = Math.random() * window.innerWidth;
-          car.y = Math.random() * window.innerHeight;
-          car.xVelocity = 0;
-          car.yVelocity = 0;
-          car.isHit = false;
-          car.isShot = false;
+          car.isShot = true;
           changed = true;
         }
       }
@@ -277,7 +272,8 @@
   function render (ms) {
     requestAnimationFrame(render);
 
-    $points.textContent = cars.slice()
+    $points.textContent = cars
+      .slice()
       .sort((a, b) => (b.points || 0) - (a.points || 0))
       .map(car => {
         return [car.name || 'anonymous', car.points || 0].join(': ');
