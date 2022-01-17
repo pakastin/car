@@ -53,6 +53,12 @@
   const cars = [localCar];
   const carsById = {};
 
+  /* test
+  cars.push({ ...localCar });
+  cars[1].$el = cars[0].$el.cloneNode(true);
+  cars[0].$el.parentNode.appendChild(cars[1].$el);
+  */
+
   const bullets = [];
 
   function updateCar (car, i) {
@@ -106,6 +112,7 @@
         car.lastShootAt = Date.now();
         const { x, y, angle, xVelocity, yVelocity } = car;
         bullets.push({
+          local: car === localCar,
           x: x + Math.sin(angle) * 10,
           y: y - Math.cos(angle) * 10,
           angle,
@@ -208,7 +215,9 @@
           if (car !== localCar) {
             if (!car.isShot) {
               car.isShot = true;
-              localCar.points++;
+              if (bullet.local) {
+                localCar.points++;
+              }
               changed = true;
             }
             continue;
@@ -294,7 +303,6 @@
     for (let i = 0; i < bullets.length; i++) {
       const bullet = bullets[i];
       const { x, y, shootAt } = bullet;
-
       if (!bullet.$el) {
         const $el = bullet.$el = document.createElement('div');
         $el.classList.add('bullet');
