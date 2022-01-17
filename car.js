@@ -60,8 +60,8 @@
       if (car === localCar) {
         car.isHit = false;
         car.isShot = false;
-        car.x = Math.random() * window.innerWidth;
-        car.y = Math.random() * window.innerHeight;
+        car.x = Math.random() * WIDTH;
+        car.y = Math.random() * HEIGHT;
         car.xVelocity = 0;
         car.yVelocity = 0;
         sendParams(localCar);
