@@ -57,7 +57,7 @@ canvas {
   opacity: .5;
 }
 
-.car-body.red {
+.car.red .car-body {
   background-color: #ff3300;
 }
 
@@ -69,6 +69,10 @@ canvas {
   color: rgba(0, 0, 0, .5);
   transform: translate(-50%, -50%);
   white-space: nowrap;
+}
+
+.car.red .car-name {
+  color: #ff3300;
 }
 
 .bullet {
