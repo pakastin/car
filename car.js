@@ -146,7 +146,15 @@
 
     const canTurn = localCar.power > 0.0025 || localCar.reverse;
 
-    const controls = window.getControls();
+    const controls = localCar.name != null
+      ? window.getControls()
+      : {
+          up: 0,
+          left: 0,
+          right: 0,
+          down: 0,
+          shoot: 0
+        };
 
     const throttle = Math.round(controls.up * 10) / 10;
     const reverse = Math.round(controls.down * 10) / 10;
