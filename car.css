@@ -139,3 +139,12 @@ canvas {
   color: hsl(0, 0, 50%);
   padding: .5rem;
 }
+.map-item {
+  position: absolute;
+  top: -.09375rem;
+  left: -.09375rem;
+  width: .1875rem;
+  height: .1875rem;
+  background-color: hsl(0, 0%, 50%);
+  border-radius: .09375rem;
+}

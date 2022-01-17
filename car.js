@@ -25,6 +25,8 @@
   ctx.fillStyle = 'hsla(0, 0%, 25%, 0.25)';
 
   const $scene = document.querySelector('.scene');
+  const $cars = document.querySelector('.cars');
+  const $map = document.querySelector('.map');
   const $bullets = document.querySelector('.bullets');
 
   const $points = document.querySelector('.points');
@@ -53,11 +55,9 @@
   const cars = [localCar];
   const carsById = {};
 
-  /* test
   cars.push({ ...localCar });
   cars[1].$el = cars[0].$el.cloneNode(true);
   cars[0].$el.parentNode.appendChild(cars[1].$el);
-  */
 
   const bullets = [];
 
@@ -246,7 +246,7 @@
     }
   }, 1000 / 120);
 
-  function renderCar (car) {
+  function renderCar (car, index) {
     const { x, y, angle, power, reverse, angularVelocity } = car;
 
     if (!car.$body) {
@@ -284,6 +284,25 @@
         1
       );
     }
+
+    if (car !== localCar) {
+      const angle = Math.atan2((car.y - localCar.y), (car.x - localCar.x));
+
+      let $mapitem = $map.childNodes[index - 1];
+
+      if (!$mapitem) {
+        $mapitem = document.createElement('div');
+        $mapitem.classList.add('map-item');
+        $map.appendChild($mapitem);
+      }
+
+      console.log(Math.cos(angle), Math.sin(angle));
+
+      const x = localCar.x + Math.cos(angle) * 12.5;
+      const y = localCar.y + Math.sin(angle) * 12.5;
+
+      $mapitem.style.transform = `translate(${x}px, ${y}px)`;
+    }
   }
 
   function render (ms) {
@@ -297,6 +316,10 @@
       }).join('\n');
 
     cars.forEach(renderCar);
+
+    while ($map.childNodes.length > cars.length - 1) {
+      $map.removeChild($map.childNodes[$map.childNodes.length - 1]);
+    }
 
     const now = Date.now();
 
@@ -353,7 +376,7 @@
       $body.appendChild($roof);
       $el.appendChild($body);
       $el.appendChild($name);
-      $scene.insertBefore($el, localCar.$el);
+      $cars.appendChild($el);
       car = {
         $el
       };
@@ -455,7 +478,7 @@
   setInterval(() => {
     ctx.fillStyle = 'hsla(0, 0%, 95%, 0.2)';
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = 'hsla(0, 0%, 25%, 0.25)';
+    ctx.fillStyle = 'hsla(0, 0%, 25%, 0.5)';
   }, 15 * 1000);
 
   function circlesHit ({ x: x1, y: y1, r: r1 }, { x: x2, y: y2, r: r2 }) {
