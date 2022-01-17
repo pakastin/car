@@ -22,7 +22,7 @@
 
   const ctx = $canvas.getContext('2d');
 
-  ctx.fillStyle = 'rgba(63, 63, 63, 0.5)';
+  ctx.fillStyle = 'hsla(0, 0%, 25%, 0.25)';
 
   const $scene = document.querySelector('.scene');
   const $bullets = document.querySelector('.bullets');
@@ -445,10 +445,10 @@
   };
 
   setInterval(() => {
-    ctx.fillStyle = 'rgba(255, 255, 255, .01)';
+    ctx.fillStyle = 'hsla(0, 0%, 95%, 0.2)';
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = 'rgba(63, 63, 63, 0.5)';
-  }, 1000);
+    ctx.fillStyle = 'hsla(0, 0%, 25%, 0.25)';
+  }, 15 * 1000);
 
   function circlesHit ({ x: x1, y: y1, r: r1 }, { x: x2, y: y2, r: r2 }) {
     return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) < (r1 + r2);

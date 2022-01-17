@@ -1,6 +1,6 @@
 body {
   overflow: hidden;
-  background-color: #ddd;
+  background-color: hsl(0, 0%, 90%);
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
   touch-action: none;
   user-select: none;
@@ -10,7 +10,7 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #eee;
+  background-color: hsl(0, 0%, 95%);
 }
 
 .wrapper {
@@ -40,7 +40,7 @@ canvas {
   width: 8px;
   height: 16px;
   border-radius: 2px;
-  background-color: #888;
+  background-color: hsl(0, 0%, 50%);
 }
 
 .car-roof {
@@ -50,7 +50,7 @@ canvas {
   width: 8px;
   height: 6px;
   border-radius: 2px;
-  background-color: rgba(255, 255, 255, .375);
+  background-color: hsla(0, 0%, 100%, .375);
 }
 
 .car-body.shot {
@@ -58,7 +58,7 @@ canvas {
 }
 
 .car.red .car-body {
-  background-color: #ff3300;
+  background-color: hsl(0, 100%, 50%);
 }
 
 .car-name {
@@ -66,13 +66,13 @@ canvas {
   top: 20px;
   left: 0;
   font-size: .625rem;
-  color: rgba(0, 0, 0, .5);
+  color: hsla(0, 0%, 0%, .5);
   transform: translate(-50%, -50%);
   white-space: nowrap;
 }
 
 .car.red .car-name {
-  color: #ff3300;
+  color: hsl(0, 50%, 50%);
 }
 
 .bullet {
@@ -82,7 +82,7 @@ canvas {
   width: 2px;
   height: 2px;
   border-radius: 1px;
-  background-color: #222;
+  background-color: hsl(0, 0%, 15%);
 }
 
 .buttons {
@@ -107,14 +107,14 @@ canvas {
 }
 .name-bg {
   height: 100%;
-  background-color: rgba(0, 0, 0, .75);
+  background-color: hsla(0, 0%, 0%, .75);
 }
 .name form {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fff;
+  background-color: hsl(0, 0%, 100%);
   padding: 1rem;
   border-radius: .25rem;
 }
@@ -136,6 +136,6 @@ canvas {
   text-align: right;
   white-space: pre;
   font-size: .625rem;
-  color: #999;
+  color: hsl(0, 0, 50%);
   padding: .5rem;
 }
