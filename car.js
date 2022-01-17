@@ -306,8 +306,6 @@
         $map.appendChild($mapitem);
       }
 
-      console.log(Math.cos(angle), Math.sin(angle));
-
       const x = localCar.x + Math.cos(angle) * 12.5;
       const y = localCar.y + Math.sin(angle) * 12.5;
 
