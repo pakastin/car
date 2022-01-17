@@ -141,10 +141,10 @@ canvas {
 }
 .map-item {
   position: absolute;
-  top: -.09375rem;
-  left: -.09375rem;
-  width: .1875rem;
-  height: .1875rem;
+  top: -0.078125rem;
+  left: -0.078125rem;
+  width: 0.15625rem;
+  height: 0.15625rem;
   background-color: hsl(0, 0%, 50%);
-  border-radius: .09375rem;
+  border-radius: 0.078125rem;
 }

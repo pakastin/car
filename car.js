@@ -55,11 +55,11 @@
   const cars = [localCar];
   const carsById = {};
 
-  /*
-  cars.push({ ...localCar });
-  cars[1].$el = cars[0].$el.cloneNode(true);
-  cars[0].$el.parentNode.appendChild(cars[1].$el);
-  */
+  if (window.location.search === '?test') {
+    cars.push({ ...localCar });
+    cars[1].$el = cars[0].$el.cloneNode(true);
+    cars[0].$el.parentNode.appendChild(cars[1].$el);
+  }
 
   const bullets = [];
 
