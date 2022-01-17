@@ -43,6 +43,16 @@ canvas {
   background-color: #888;
 }
 
+.car-roof {
+  position: absolute;
+  top: 6px;
+  left: 0px;
+  width: 8px;
+  height: 6px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, .375);
+}
+
 .car-body.shot {
   opacity: .5;
 }

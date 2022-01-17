@@ -45,6 +45,11 @@
     points: 0
   };
 
+  const scene = {
+    x: window.innerWidth / 2 - localCar.x,
+    y: window.innerHeight / 2 - localCar.y
+  };
+
   const cars = [localCar];
   const carsById = {};
 
@@ -305,7 +310,10 @@
       }
     }
 
-    $scene.style.transform = `translate(${window.innerWidth / 2 - localCar.x}px, ${window.innerHeight / 2 - localCar.y}px)`;
+    scene.x = window.innerWidth / 2 - localCar.x;
+    scene.y = window.innerHeight / 2 - localCar.y;
+
+    $scene.style.transform = `translate(${scene.x}px, ${scene.y}px)`;
   }
 
   requestAnimationFrame(render);
@@ -330,8 +338,11 @@
       $el.classList.add('car');
       const $body = document.createElement('div');
       $body.classList.add('car-body');
+      const $roof = document.createElement('div');
+      $roof.classList.add('car-roof');
       const $name = document.createElement('div');
       $name.classList.add('car-name');
+      $body.appendChild($roof);
       $el.appendChild($body);
       $el.appendChild($name);
       $scene.insertBefore($el, localCar.$el);
