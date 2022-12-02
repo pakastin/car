@@ -109,7 +109,7 @@
     car.angle += car.angularVelocity;
     car.angularVelocity *= angularDrag;
 
-    if (car.isShooting) {
+    if (car.isShooting && !car.isShot && !car.isHit) {
       if (!car.lastShootAt || car.lastShootAt < Date.now() - 60) {
         car.lastShootAt = Date.now();
         const { x, y, angle, xVelocity, yVelocity } = car;
