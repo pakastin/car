@@ -365,8 +365,6 @@
     'https://car-ash1.pakastin.fi'
   ], 'https://car.pakastin.fi');
 
-  console.log('Connecting to ' + host);
-
   const socket = io(host);
 
   socket.on('connect', () => {
