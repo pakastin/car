@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   /* global requestAnimationFrame, io */
 
   // Physics
@@ -357,9 +357,17 @@
 
   requestAnimationFrame(render);
 
-  const socket = io('https://car.pakastin.fi', {
-    withCredentials: true
-  });
+  const host = await fastestPing([
+    'hel1',
+    'nbg1',
+    'fsn1',
+    'hil1',
+    'ash1'
+  ]);
+
+  console.log('Connecting to ' + host);
+
+  const socket = io('https://car-' + host + '.pakastin.fi');
 
   socket.on('connect', () => {
     sendParams(localCar);
@@ -503,3 +511,31 @@
     $name.parentNode.removeChild($name);
   };
 })();
+
+async function fastestPing (hosts) {
+  let result;
+
+  for (const host of hosts) {
+    try {
+      const startTime = Date.now();
+      await fetch('https://car-' + host + '.pakastin.fi/ping');
+      const latency = Date.now() - startTime;
+
+      if (result) {
+        if (latency < result.latency) {
+          result = { host, latency };
+        }
+      } else {
+        result = { host, latency };
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  if (result) {
+    return 'https://' + result.host;
+  } else {
+    return 'https://car.pakastin.fi';
+  }
+}
