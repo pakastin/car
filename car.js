@@ -358,6 +358,7 @@
   requestAnimationFrame(render);
 
   const $name = document.querySelector('.name');
+  const $p = document.querySelector('p');
 
   $name.querySelector('form').onsubmit = (e) => {
     e.preventDefault();
@@ -368,14 +369,16 @@
   };
 
   const host = await fastestPing([
-    'https://car-hel1.pakastin.fi',
-    'https://car-nbg1.pakastin.fi',
-    'https://car-fsn1.pakastin.fi',
-    'https://car-hil1.pakastin.fi',
-    'https://car-ash1.pakastin.fi'
-  ], 'https://car.pakastin.fi');
+    { host: 'https://car-hel1.pakastin.fi', city: 'Helsinki, Finland' },
+    { host: 'https://car-nbg1.pakastin.fi', city: 'Nuremberg, Germany' },
+    { host: 'https://car-fsn1.pakastin.fi', city: 'Falkenstein, Germany' },
+    { host: 'https://car-hil1.pakastin.fi', city: 'Hillsboro, Oregon' },
+    { host: 'https://car-ash1.pakastin.fi', city: 'Ashburn, Virginia' }
+  ], { host: 'https://car.pakastin.fi', city: 'Cloudflare (fallback)' });
 
-  const socket = io(host);
+  $p.textContent = 'Connected to ' + host.city + '.';
+
+  const socket = io(host.host);
 
   socket.on('connect', () => {
     sendParams(localCar);
@@ -516,7 +519,7 @@ async function fastestPing (hosts, fallback) {
   for (const host of hosts) {
     try {
       const startTime = Date.now();
-      await fetch(host + '/ping');
+      await fetch(host.host + '/ping');
       const latency = Date.now() - startTime;
 
       if (result) {

@@ -105,6 +105,11 @@ canvas {
   right: 0;
   bottom: 0;
 }
+.name p {
+  font-size: .75rem;
+  margin: 0;
+  margin-bottom: 1rem;
+}
 .name-bg {
   height: 100%;
   background-color: hsla(0, 0%, 0%, .75);
