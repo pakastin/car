@@ -367,7 +367,7 @@
 
   console.log('Connecting to ' + host);
 
-  const socket = io('https://' + host);
+  const socket = io(host);
 
   socket.on('connect', () => {
     sendParams(localCar);
