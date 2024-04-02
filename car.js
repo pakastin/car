@@ -357,6 +357,16 @@
 
   requestAnimationFrame(render);
 
+  const $name = document.querySelector('.name');
+
+  $name.querySelector('form').onsubmit = (e) => {
+    e.preventDefault();
+
+    localCar.name = $name.querySelector('input').value || '';
+
+    $name.parentNode.removeChild($name);
+  };
+
   const host = await fastestPing([
     'https://car-hel1.pakastin.fi',
     'https://car-nbg1.pakastin.fi',
@@ -498,16 +508,6 @@
   function circlesHit ({ x: x1, y: y1, r: r1 }, { x: x2, y: y2, r: r2 }) {
     return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) < (r1 + r2);
   }
-
-  const $name = document.querySelector('.name');
-
-  $name.querySelector('form').onsubmit = (e) => {
-    e.preventDefault();
-
-    localCar.name = $name.querySelector('input').value || '';
-
-    $name.parentNode.removeChild($name);
-  };
 })();
 
 async function fastestPing (hosts, fallback) {
