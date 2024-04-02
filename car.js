@@ -358,16 +358,16 @@
   requestAnimationFrame(render);
 
   const host = await fastestPing([
-    'hel1',
-    'nbg1',
-    'fsn1',
-    'hil1',
-    'ash1'
-  ]);
+    'https://car-hel1.pakastin.fi',
+    'https://car-nbg1.pakastin.fi',
+    'https://car-fsn1.pakastin.fi',
+    'https://car-hil1.pakastin.fi',
+    'https://car-ash1.pakastin.fi'
+  ], 'https://car.pakastin.fi');
 
   console.log('Connecting to ' + host);
 
-  const socket = io('https://car-' + host + '.pakastin.fi');
+  const socket = io('https://' + host);
 
   socket.on('connect', () => {
     sendParams(localCar);
@@ -512,13 +512,13 @@
   };
 })();
 
-async function fastestPing (hosts) {
+async function fastestPing (hosts, fallback) {
   let result;
 
   for (const host of hosts) {
     try {
       const startTime = Date.now();
-      await fetch('https://car-' + host + '.pakastin.fi/ping');
+      await fetch(host + '/ping');
       const latency = Date.now() - startTime;
 
       if (result) {
@@ -534,8 +534,8 @@ async function fastestPing (hosts) {
   }
 
   if (result) {
-    return 'https://' + result.host;
+    return result.host;
   } else {
-    return 'https://car.pakastin.fi';
+    return fallback;
   }
 }
