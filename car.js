@@ -216,7 +216,7 @@
       if (
         circlesHit(
           { x: car.x, y: car.y, r: 7.5 },
-          { x: localCar.x, y: localCar.y, r: 7.5 },
+          { x: localCar.x, y: localCar.y, r: 7.5 }
         )
       ) {
         localCar.isHit = true;
@@ -234,7 +234,7 @@
           bullet &&
           circlesHit(
             { x: car.x, y: car.y, r: 7.5 },
-            { x: bullet.x, y: bullet.y, r: 2 },
+            { x: bullet.x, y: bullet.y, r: 2 }
           )
         ) {
           if (car !== localCar) {
@@ -307,7 +307,7 @@
           Math.sin(angle + (3 * Math.PI) / 2) * 3 +
           Math.sin(angle + (2 * Math.PI) / 2) * 3,
         1,
-        1,
+        1
       );
       ctx.fillRect(
         x -
@@ -317,7 +317,7 @@
           Math.sin(angle + (3 * Math.PI) / 2) * 3 +
           Math.sin(angle + (4 * Math.PI) / 2) * 3,
         1,
-        1,
+        1
       );
     }
 
@@ -403,7 +403,7 @@
       { host: "https://car-hil1.pakastin.fi", city: "Hillsboro, Oregon" },
       { host: "https://car-ash1.pakastin.fi", city: "Ashburn, Virginia" },
     ],
-    { host: "https://car.pakastin.fi", city: "Cloudflare (fallback)" },
+    { host: "https://car.pakastin.fi", city: "Cloudflare (fallback)" }
   );
 
   $p.textContent = "Connected to " + host.city + ".";
