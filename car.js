@@ -397,11 +397,31 @@
 
   const host = await fastestPing(
     [
-      { host: "https://car-hel1.pakastin.fi", city: "Helsinki, Finland" },
-      { host: "https://car-nbg1.pakastin.fi", city: "Nuremberg, Germany" },
-      { host: "https://car-fsn1.pakastin.fi", city: "Falkenstein, Germany" },
-      { host: "https://car-hil1.pakastin.fi", city: "Hillsboro, Oregon" },
-      { host: "https://car-ash1.pakastin.fi", city: "Ashburn, Virginia" },
+      {
+        host: "https://car-hel1.pakastin.fi",
+        city: "Helsinki, Finland",
+        continent: "Europe",
+      },
+      {
+        host: "https://car-nbg1.pakastin.fi",
+        city: "Nuremberg, Germany",
+        continent: "Europe",
+      },
+      {
+        host: "https://car-fsn1.pakastin.fi",
+        city: "Falkenstein, Germany",
+        continent: "Europe",
+      },
+      {
+        host: "https://car-hil1.pakastin.fi",
+        city: "Hillsboro, Oregon",
+        continent: "America",
+      },
+      {
+        host: "https://car-ash1.pakastin.fi",
+        city: "Ashburn, Virginia",
+        continent: "America",
+      },
     ],
     { host: "https://car.pakastin.fi", city: "Cloudflare (fallback)" }
   );
@@ -545,6 +565,24 @@
 
 async function fastestPing(hosts, fallback) {
   let result;
+
+  try {
+    const continent = Intl.DateTimeFormat()
+      .resolvedOptions()
+      .timeZone.split("/")[0];
+
+    hosts.sort((a, b) => {
+      if (continent === a.continent && continent !== b.continent) {
+        return -1;
+      } else if (continent === b.continent && continent !== a.continent) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
 
   for (const host of hosts) {
     const abortController = new AbortController();
