@@ -412,16 +412,6 @@
         city: "Falkenstein, Germany",
         continent: "Europe",
       },
-      {
-        host: "https://car-hil1.pakastin.fi",
-        city: "Hillsboro, Oregon",
-        continent: "America",
-      },
-      {
-        host: "https://car-ash1.pakastin.fi",
-        city: "Ashburn, Virginia",
-        continent: "America",
-      },
     ],
     { host: "https://car.pakastin.fi", city: "Cloudflare (fallback)" }
   );
