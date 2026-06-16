@@ -407,6 +407,16 @@
         city: "Helsinki 2, Finland",
         continent: "Europe",
       },
+      {
+        host: "https://car-sjo1.pakastin.fi",
+        city: "San Jose, California",
+        continent: "America",
+      },
+      {
+        host: "https://car-sjo1.pakastin.fi",
+        city: "New York City",
+        continent: "America",
+      },
     ],
     { host: "https://car.pakastin.fi", city: "Cloudflare (fallback)" }
   );
