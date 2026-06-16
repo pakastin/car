@@ -403,13 +403,8 @@
         continent: "Europe",
       },
       {
-        host: "https://car-nbg1.pakastin.fi",
-        city: "Nuremberg, Germany",
-        continent: "Europe",
-      },
-      {
-        host: "https://car-fsn1.pakastin.fi",
-        city: "Falkenstein, Germany",
+        host: "https://car-hel2.pakastin.fi",
+        city: "Helsinki 2, Finland",
         continent: "Europe",
       },
     ],
