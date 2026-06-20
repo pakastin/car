@@ -1,10 +1,15 @@
 body {
   overflow: hidden;
   background-color: hsl(0, 0%, 90%);
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.dark-mode {
+  background-color: hsl(0, 0%, 0%);
 }
 
 canvas {
@@ -51,11 +56,11 @@ canvas {
   width: 8px;
   height: 6px;
   border-radius: 2px;
-  background-color: hsla(0, 0%, 100%, .375);
+  background-color: hsla(0, 0%, 100%, 0.375);
 }
 
 .car-body.shot {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .car.red .car-body {
@@ -66,8 +71,8 @@ canvas {
   position: absolute;
   top: 20px;
   left: 0;
-  font-size: .625rem;
-  color: hsla(0, 0%, 0%, .5);
+  font-size: 0.625rem;
+  color: hsla(0, 0%, 0%, 0.5);
   transform: translate(-50%, -50%);
   white-space: nowrap;
 }
@@ -86,6 +91,10 @@ canvas {
   background-color: hsl(0, 0%, 15%);
 }
 
+.dark-bullet {
+  background-color: hsl(98, 100%, 50%);
+}
+
 .buttons {
   position: fixed;
   left: 0;
@@ -96,8 +105,8 @@ canvas {
   position: fixed;
   bottom: 0;
   left: 0;
-  padding: .5rem;
-  font-size: .75rem;
+  padding: 0.5rem;
+  font-size: 0.75rem;
 }
 .name {
   position: fixed;
@@ -107,13 +116,13 @@ canvas {
   bottom: 0;
 }
 .name p {
-  font-size: .75rem;
+  font-size: 0.75rem;
   margin: 0;
   margin-bottom: 1rem;
 }
 .name-bg {
   height: 100%;
-  background-color: hsla(0, 0%, 0%, .75);
+  background-color: hsla(0, 0%, 0%, 0.75);
 }
 .name form {
   position: absolute;
@@ -122,18 +131,18 @@ canvas {
   transform: translate(-50%, -50%);
   background-color: hsl(0, 0%, 100%);
   padding: 1rem;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 .name form input {
   display: inline-block;
   font: inherit;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 .name form button {
   display: inline-block;
   font: inherit;
-  padding: .5rem;
-  margin-left: .5rem;
+  padding: 0.5rem;
+  margin-left: 0.5rem;
 }
 .points {
   position: fixed;
@@ -141,9 +150,9 @@ canvas {
   right: 5rem;
   text-align: right;
   white-space: pre;
-  font-size: .625rem;
+  font-size: 0.625rem;
   color: hsl(0, 0, 50%);
-  padding: .5rem;
+  padding: 0.5rem;
 }
 .map-item {
   position: absolute;

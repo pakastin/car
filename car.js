@@ -364,6 +364,9 @@
       if (!bullet.$el) {
         const $el = (bullet.$el = document.createElement("div"));
         $el.classList.add("bullet");
+        if ($canvas.classList.contains("dark-mode")) {
+          $el.classList.add("dark-bullet");
+        }
         $bullets.appendChild($el);
       }
       bullet.$el.style.transform = `translate(${x}px, ${y}px)`;
@@ -545,6 +548,20 @@
 
   $clearScreen.onclick = () => {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  };
+
+  const $darkmode = document.querySelector(".darkmode");
+
+  $darkmode.onclick = (event) => {
+    $canvas.classList.toggle("dark-mode");
+    $bullets.classList.toggle("dark-bullet");
+
+    if ($canvas.classList.contains("dark-mode")) {
+      ctx.fillStyle = "hsla(0, 0.00%, 100.00%, 0.20)";
+    } else {
+      ctx.fillStyle = "hsla(0, 0%, 25%, 0.25)";
+    }
+    event.target.blur();
   };
 
   setInterval(() => {
